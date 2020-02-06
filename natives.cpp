@@ -16,19 +16,20 @@ static cell_t L4D_GetTeamScore(IPluginContext *pContext, const cell_t *params) {
   bool type = (bool) params[2]; // 0 = m_iSurvivorScore
                                 // 1 = m_iCampaignScore
 
-  if (logicalTeam != 1 && logicalTeam != 2) {
-    return pContext->ThrowNativeError("Logical team \"%d\" is invalid - options are \"1\" or \"2\"", logicalTeam);
-  }
-
-  if (!CALL_JOIN_MEMBER(GetTeamScore, "GetTeamScore")) {
+  if (!g_pGameRules)
     return pContext->ThrowNativeError("Error detected in native call (see error logs)");
-  }
+  if (!CALL_JOIN_MEMBER(GetTeamScore, "GetTeamScore"))
+    return pContext->ThrowNativeError("Error detected in native call (see error logs)");
+  if (logicalTeam != 1 && logicalTeam != 2)
+    return pContext->ThrowNativeError("Logical team \"%d\" is invalid - options are \"1\" or \"2\"", logicalTeam);
 
   return CALL_INVOKE_MEMBER(g_pGameRules, GetTeamScore)(logicalTeam, type);
 }
 
 CALL_DECL_MEMBER(CBaseServer, SetReservationCookie, void, (uint64_t, const char *, ...));
 static cell_t L4D_LobbyUnreserve(IPluginContext *pContext, const cell_t *params) {
+  if (!g_pServer)
+    return pContext->ThrowNativeError("Error detected in native call (see error logs)");
   if (!CALL_JOIN_MEMBER(SetReservationCookie, "SetReservationCookie"))
     return pContext->ThrowNativeError("Error detected in native call (see error logs)");
 
@@ -47,18 +48,20 @@ static cell_t L4D_IsLobbyReserved(IPluginContext *pContext, const cell_t *params
 
 CALL_DECL_MEMBER(CTerrorGameRules, IsMissionFinalMap, bool, (void));
 static cell_t L4D_IsMissionFinalMap(IPluginContext *pContext, const cell_t *params) {
-  if (!CALL_JOIN_MEMBER(IsMissionFinalMap, "IsMissionFinalMap")) {
+  if (!g_pGameRules)
     return pContext->ThrowNativeError("Error detected in native call (see error logs)");
-  }
+  if (!CALL_JOIN_MEMBER(IsMissionFinalMap, "IsMissionFinalMap"))
+    return pContext->ThrowNativeError("Error detected in native call (see error logs)");
 
   return CALL_INVOKE_MEMBER(g_pGameRules, IsMissionFinalMap)();
 }
 
 CALL_DECL_MEMBER(CDirector, RestartScenarioFromVote, void, (char const*));
 static cell_t L4D_RestartScenarioFromVote(IPluginContext *pContext, const cell_t *params) {
-  if (!CALL_JOIN_MEMBER(IsMissionFinalMap, "RestartScenarioFromVote")) {
+  if (!g_pDirector)
     return pContext->ThrowNativeError("Error detected in native call (see error logs)");
-  }
+  if (!CALL_JOIN_MEMBER(IsMissionFinalMap, "RestartScenarioFromVote"))
+    return pContext->ThrowNativeError("Error detected in native call (see error logs)");
 
   char *map = nullptr;
   pContext->LocalToString(params[1], &map);
@@ -69,9 +72,10 @@ static cell_t L4D_RestartScenarioFromVote(IPluginContext *pContext, const cell_t
 
 CALL_DECL_MEMBER(CTerrorGameRules, NotifyNetworkStateChanged, void, (void));
 static cell_t L4D_NotifyNetworkStateChanged(IPluginContext *pContext, const cell_t *params) {
-  if (!CALL_JOIN_MEMBER(IsMissionFinalMap, "NotifyNetworkStateChanged")) {
+  if (!g_pGameRules)
     return pContext->ThrowNativeError("Error detected in native call (see error logs)");
-  }
+  if (!CALL_JOIN_MEMBER(IsMissionFinalMap, "NotifyNetworkStateChanged"))
+    return pContext->ThrowNativeError("Error detected in native call (see error logs)");
 
   char *map = nullptr;
   pContext->LocalToString(params[1], &map);
@@ -102,6 +106,8 @@ static cell_t L4D2_GetCampaignScores(IPluginContext *pContext, const cell_t *par
 
 CALL_DECL_MEMBER(CDirector, OnBeginRoundSetupTime, void, (void));
 static cell_t L4D2_ScavengeBeginRoundSetupTime(IPluginContext *pContext, const cell_t *params) {
+  if (!g_pDirector)
+    return pContext->ThrowNativeError("Error detected in native call (see error logs)");
   if (!CALL_JOIN_MEMBER(OnBeginRoundSetupTime, "OnBeginRoundSetupTime")) {
     return pContext->ThrowNativeError("Error detected in native call (see error logs)");
   }
@@ -121,6 +127,8 @@ static cell_t L4D2_SetVersusMaxCompletionScore(IPluginContext *pContext, const c
 
 CALL_DECL_MEMBER(CDirector, ResetMobTimer, void, (void));
 static cell_t L4D2_ResetMobTimer(IPluginContext *pContext, const cell_t *params) {
+  if (!g_pDirector)
+    return pContext->ThrowNativeError("Error detected in native call (see error logs)");
   if (!CALL_JOIN_MEMBER(ResetMobTimer, "ResetMobTimer")) {
     return pContext->ThrowNativeError("Error detected in native call (see error logs)");
   }
