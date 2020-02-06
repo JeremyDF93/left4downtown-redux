@@ -1,0 +1,113 @@
+"Games"
+{
+  "left4dead2"
+  {
+    "Addresses"
+    {
+      "TheZombieManager"
+      {
+        "linux"
+        {
+          "signature"   "TheZombieManager"
+          "read"        "0"
+        }
+      }
+      "TheDirector"
+      {
+        "linux"
+        {
+          "signature"   "TheDirector"
+          "read"        "0"
+        }
+      }
+    }
+    "Signatures"
+    {
+      "TheZombieManager"
+      {
+        "library"     "server"
+        "linux"       "@TheZombieManager"
+      }
+      "TheDirector"
+      {
+        "library"     "server"
+        "linux"       "@TheDirector"
+      }
+      "SpawnTank"
+      {
+        "library"   "server"
+        "linux"     "@_ZN13ZombieManager9SpawnTankERK6VectorRK6QAngle"
+      }
+      "SpawnWitch"
+      {
+        "library"   "server"
+        "linux"     "@_ZN13ZombieManager10SpawnWitchERK6VectorRK6QAngle"
+      }
+      "ClearTeamScores"
+      {
+        "library"   "server"
+        "linux"     "@_ZN9CDirector15ClearTeamScoresEb"
+      }
+      "OnFirstSurvivorLeftSafeArea"
+      {
+        "library"   "server"
+        "linux"     "@_ZN9CDirector27OnFirstSurvivorLeftSafeAreaEP13CTerrorPlayer"
+      }
+      "GetScriptValueInt"
+      {
+        "library"   "server"
+        "linux"     "@_ZN9CDirector14GetScriptValueEPKci"
+      }
+      "TryOfferingTankBot"
+      {
+        "library"   "server"
+        "linux"     "@_ZN9CDirector18TryOfferingTankBotEP11CBaseEntityb"
+      }
+      "OnMobRushStart"
+      {
+        "library"   "server"
+        "linux"     "@_ZN9CDirector14OnMobRushStartEv"
+      }
+      "RestartScenarioFromVote"
+      {
+        "library"   "server"
+        "linux"     "@_ZN9CDirector23RestartScenarioFromVoteEPKc"
+      }
+      "ResetMobTimer"
+      {
+        "library"   "server"
+        "linux"     "@_ZN9CDirector13ResetMobTimerEv"
+      }
+      "OnBeginRoundSetupTime"
+      {
+        "library"   "server"
+        "linux"     "@_ZN21CDirectorScavengeMode21OnBeginRoundSetupTimeEv"
+      }
+      "GetTeamScore"
+      {
+        "library"   "server"
+        "linux"     "@_ZNK16CTerrorGameRules12GetTeamScoreEib"
+      }
+      "SetCampaignScores"
+      {
+        "library"   "server"
+        "linux"     "@_ZN16CTerrorGameRules17SetCampaignScoresEii"
+      }
+      "IsMissionFinalMap"
+      {
+        "library"   "server"
+        "linux"     "@_ZN16CTerrorGameRules17IsMissionFinalMapEv"
+      }
+      "NotifyNetworkStateChanged"
+      {
+        "library"   "server"
+        "linux"     "@_ZN15CGameRulesProxy25NotifyNetworkStateChangedEv"
+      }
+      "SetReservationCookie"
+      {
+        "library"   "engine"
+        "linux"     "@_ZN11CBaseServer20SetReservationCookieEyPKcz"
+      }
+    }
+  }
+}

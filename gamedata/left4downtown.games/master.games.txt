@@ -1,0 +1,11 @@
+"Game Master"
+{
+  "engine.l4d.txt"
+  {
+    "engine"	"left4dead"
+  }
+  "engine.l4d2.txt"
+  {
+    "engine"	"left4dead2"
+  }
+}
