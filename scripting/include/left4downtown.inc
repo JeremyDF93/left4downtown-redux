@@ -49,6 +49,7 @@ native int L4D2_GetVersusMaxCompletionScore();
 native void L4D2_SetVersusMaxCompletionScore(int score);
 native void L4D2_ResetMobTimer();
 
+/*
 public SharedPlugin __pl_left4downtown = {
   name = "Left 4 Downtown",
   file = "left4downtown.smx",
@@ -58,6 +59,7 @@ public SharedPlugin __pl_left4downtown = {
   required = 0,
 #endif
 };
+*/
 
 public Extension __ext_left4downtown = {
   name = "Left 4 Downtown",
