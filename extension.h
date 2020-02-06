@@ -3,7 +3,7 @@
 
 #include "smsdk_ext.h"
 #include "CDetour/detours.h"
-#include "CCalls/calls.h"
+#include "CCall/calls.h"
 #include <IBinTools.h>
 #include <ISDKTools.h>
 #include "vglobals.h"
