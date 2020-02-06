@@ -108,9 +108,8 @@ CALL_DECL_MEMBER(CDirector, OnBeginRoundSetupTime, void, (void));
 static cell_t L4D2_ScavengeBeginRoundSetupTime(IPluginContext *pContext, const cell_t *params) {
   if (!g_pDirector)
     return pContext->ThrowNativeError("Error detected in native call (see error logs)");
-  if (!CALL_JOIN_MEMBER(OnBeginRoundSetupTime, "OnBeginRoundSetupTime")) {
+  if (!CALL_JOIN_MEMBER(OnBeginRoundSetupTime, "OnBeginRoundSetupTime"))
     return pContext->ThrowNativeError("Error detected in native call (see error logs)");
-  }
 
   CALL_INVOKE_MEMBER(g_pDirector, OnBeginRoundSetupTime)();
 
@@ -129,9 +128,8 @@ CALL_DECL_MEMBER(CDirector, ResetMobTimer, void, (void));
 static cell_t L4D2_ResetMobTimer(IPluginContext *pContext, const cell_t *params) {
   if (!g_pDirector)
     return pContext->ThrowNativeError("Error detected in native call (see error logs)");
-  if (!CALL_JOIN_MEMBER(ResetMobTimer, "ResetMobTimer")) {
+  if (!CALL_JOIN_MEMBER(ResetMobTimer, "ResetMobTimer"))
     return pContext->ThrowNativeError("Error detected in native call (see error logs)");
-  }
 
   CALL_INVOKE_MEMBER(g_pDirector, ResetMobTimer)();
 
