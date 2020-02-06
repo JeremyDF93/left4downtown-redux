@@ -6,8 +6,10 @@ projectName = 'left4downtown'
 # smsdk_ext.cpp will be automatically added later
 sourceFiles = [
   'extension.cpp',
-  'forwards.cpp',
-  'natives.cpp',
+  'shared/forwards.cpp',
+  'l4d2/forwards.cpp',
+  'shared/natives.cpp',
+  'l4d2/natives.cpp',
   'vglobals.cpp',
   'RegNatives.cpp',
   'CCall/calls.cpp',

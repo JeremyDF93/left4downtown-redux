@@ -9,8 +9,6 @@ CDetour *Detour_OnFirstSurvivorLeftSafeArea = nullptr;
 CDetour *Detour_TryOfferingTankBot = nullptr;
 CDetour *Detour_OnMobRushStart = nullptr;
 
-CDetour *Detour_GetScriptValueInt = nullptr;
-
 IForward *g_pFwdOnSpawnTank = nullptr;
 IForward *g_pFwdOnSpawnWitch = nullptr;
 IForward *g_pFwdOnClearTeamScores = nullptr;
@@ -18,8 +16,6 @@ IForward *g_pFwdOnSetCampaignScores = nullptr;
 IForward *g_pFwdOnFirstSurvivorLeftSafeArea = nullptr;
 IForward *g_pFwdOnTryOfferingTankBot = nullptr;
 IForward *g_pFwdOnMobRushStart = nullptr;
-
-IForward *g_pFwdOnGetScriptValueInt = nullptr;
 
 //   _____                   __    _      __  ___
 //  /__  /  ____  ____ ___  / /_  (_)__  /  |/  /___ _____  ____ _____ ____  _____
@@ -157,32 +153,6 @@ DETOUR_DECL_MEMBER1(OnFirstSurvivorLeftSafeArea, void, CTerrorPlayer *, pPlayer)
   }
 }
 
-// GetScriptValue(char const*, int)
-DETOUR_DECL_MEMBER2(GetScriptValueInt, int, const char *, key, int, def) {
-  if (!g_pFwdOnGetScriptValueInt) {
-    return DETOUR_MEMBER_CALL(GetScriptValueInt)(key, def);
-  }
-
-#ifdef _DEBUG
-  smutils->LogMessage(myself, "GetScriptValueInt(%s, %d)", key, def);
-#endif
-
-  int orig = DETOUR_MEMBER_CALL(GetScriptValueInt)(key, def);
-  int ref = orig;
-
-  cell_t result = Pl_Continue;
-
-  g_pFwdOnGetScriptValueInt->PushString(key);
-  g_pFwdOnGetScriptValueInt->PushCellByRef(&ref);
-  g_pFwdOnGetScriptValueInt->Execute(&result);
-
-  if (result == Pl_Changed || result == Pl_Handled) {
-    return ref;
-  }
-
-  return orig;
-}
-
 // TryOfferingTankBot(CBaseEntity*, bool)
 DETOUR_DECL_MEMBER2(TryOfferingTankBot, void, CBaseEntity *, pEntity, bool, flag) {
   if (!g_pFwdOnTryOfferingTankBot) {
@@ -231,7 +201,7 @@ DETOUR_DECL_MEMBER0(OnMobRushStart, void) {
 //  /_/    \__,_/_/ /_/\___/\__/_/\____/_/ /_/____/
 //
 
-void CreateDetours() {
+void CreateSharedDetours() {
   Detour_SpawnTank = DETOUR_CREATE_MEMBER(SpawnTank, "SpawnTank");
   if (Detour_SpawnTank) Detour_SpawnTank->EnableDetour();
 
@@ -252,14 +222,9 @@ void CreateDetours() {
 
   Detour_OnMobRushStart = DETOUR_CREATE_MEMBER(OnMobRushStart, "OnMobRushStart");
   if (Detour_OnMobRushStart) Detour_OnMobRushStart->EnableDetour();
-
-#if SOURCE_ENGINE == SE_LEFT4DEAD2
-  Detour_GetScriptValueInt = DETOUR_CREATE_MEMBER(GetScriptValueInt, "GetScriptValueInt");
-  if (Detour_GetScriptValueInt) Detour_GetScriptValueInt->EnableDetour();
-#endif
 }
 
-void DestroyDetours() {
+void DestroySharedDetours() {
   if (Detour_SpawnTank) Detour_SpawnTank->Destroy();
   if (Detour_SpawnWitch) Detour_SpawnWitch->Destroy();
   if (Detour_ClearTeamScores) Detour_ClearTeamScores->Destroy();
@@ -267,11 +232,9 @@ void DestroyDetours() {
   if (Detour_OnFirstSurvivorLeftSafeArea) Detour_OnFirstSurvivorLeftSafeArea->Destroy();
   if (Detour_TryOfferingTankBot) Detour_TryOfferingTankBot->Destroy();
   if (Detour_OnMobRushStart) Detour_TryOfferingTankBot->Destroy();
-
-  if (Detour_GetScriptValueInt) Detour_GetScriptValueInt->Destroy();
 }
 
-void CreateForwards() {
+void CreateSharedForwards() {
   g_pFwdOnSpawnTank = forwards->CreateForward("L4D_OnSpawnTank", ET_Event, 2, nullptr,
       Param_Array, Param_Array);
   g_pFwdOnSpawnWitch = forwards->CreateForward("L4D_OnSpawnWitch", ET_Event, 2, nullptr,
@@ -284,12 +247,9 @@ void CreateForwards() {
       Param_Cell);
   g_pFwdOnTryOfferingTankBot = forwards->CreateForward("L4D_OnTryOfferingTankBot", ET_Event, 0, nullptr);
   g_pFwdOnMobRushStart = forwards->CreateForward("L4D_OnMobRushStart", ET_Event, 0, nullptr);
-
-  g_pFwdOnGetScriptValueInt = forwards->CreateForward("L4D2_OnGetScriptValueInt", ET_Event, 2, nullptr,
-      Param_String, Param_CellByRef);
 }
 
-void ReleaseForwards() {
+void ReleaseSharedForwards() {
   forwards->ReleaseForward(g_pFwdOnSpawnTank);
   forwards->ReleaseForward(g_pFwdOnSpawnWitch);
   forwards->ReleaseForward(g_pFwdOnClearTeamScores);
@@ -297,6 +257,4 @@ void ReleaseForwards() {
   forwards->ReleaseForward(g_pFwdOnFirstSurvivorLeftSafeArea);
   forwards->ReleaseForward(g_pFwdOnTryOfferingTankBot);
   forwards->ReleaseForward(g_pFwdOnMobRushStart);
-
-  forwards->ReleaseForward(g_pFwdOnGetScriptValueInt);
 }

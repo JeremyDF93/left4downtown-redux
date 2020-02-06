@@ -1,15 +1,6 @@
 #include "extension.h"
 #include "RegNatives.h"
 
-/***
- *       _____ __                        __
- *      / ___// /_  ____ _________  ____/ /
- *      \__ \/ __ \/ __ `/ ___/ _ \/ __  /
- *     ___/ / / / / /_/ / /  /  __/ /_/ /
- *    /____/_/ /_/\__,_/_/   \___/\__,_/
- *
- */
-
 CALL_DECL_MEMBER(CTerrorGameRules, GetTeamScore, int, (int, bool));
 static cell_t L4D_GetTeamScore(IPluginContext *pContext, const cell_t *params) {
   int logicalTeam = (int) params[1];
@@ -84,69 +75,12 @@ static cell_t L4D_NotifyNetworkStateChanged(IPluginContext *pContext, const cell
   return 1;
 }
 
-/***
- *        __   __ __  ____ ___
- *       / /  / // / / __ \__ \
- *      / /  / // /_/ / / /_/ /
- *     / /__/__  __/ /_/ / __/
- *    /_____/ /_/ /_____/____/
- *
- */
-
-static cell_t L4D2_GetCampaignScores(IPluginContext *pContext, const cell_t *params) {
-  cell_t *addr;
-  pContext->LocalToPhysAddr(params[1], &addr);
-  *addr = static_cast<cell_t>(-1);
-
-  pContext->LocalToPhysAddr(params[2], &addr);
-  *addr = static_cast<cell_t>(-1);
-
-  return 1;
-}
-
-CALL_DECL_MEMBER(CDirector, OnBeginRoundSetupTime, void, (void));
-static cell_t L4D2_ScavengeBeginRoundSetupTime(IPluginContext *pContext, const cell_t *params) {
-  if (!g_pDirector)
-    return pContext->ThrowNativeError("Error detected in native call (see error logs)");
-  if (!CALL_JOIN_MEMBER(OnBeginRoundSetupTime, "OnBeginRoundSetupTime"))
-    return pContext->ThrowNativeError("Error detected in native call (see error logs)");
-
-  CALL_INVOKE_MEMBER(g_pDirector, OnBeginRoundSetupTime)();
-
-  return 1;
-}
-
-static cell_t L4D2_GetVersusMaxCompletionScore(IPluginContext *pContext, const cell_t *params) {
-  return 1;
-}
-
-static cell_t L4D2_SetVersusMaxCompletionScore(IPluginContext *pContext, const cell_t *params) {
-  return 1;
-}
-
-CALL_DECL_MEMBER(CDirector, ResetMobTimer, void, (void));
-static cell_t L4D2_ResetMobTimer(IPluginContext *pContext, const cell_t *params) {
-  if (!g_pDirector)
-    return pContext->ThrowNativeError("Error detected in native call (see error logs)");
-  if (!CALL_JOIN_MEMBER(ResetMobTimer, "ResetMobTimer"))
-    return pContext->ThrowNativeError("Error detected in native call (see error logs)");
-
-  CALL_INVOKE_MEMBER(g_pDirector, ResetMobTimer)();
-
-  return 1;
-}
-
-sp_nativeinfo_t g_MyNatives[] = {
+sp_nativeinfo_t g_SharedNatives[] = {
   {"L4D_GetTeamScore",                    L4D_GetTeamScore},
   {"L4D_RestartScenarioFromVote",         L4D_RestartScenarioFromVote},
   {"L4D_LobbyUnreserve",                  L4D_LobbyUnreserve},
   {"L4D_LobbyIsReserved",                 L4D_IsLobbyReserved},
   {"L4D_IsMissionFinalMap",               L4D_IsMissionFinalMap},
   {"L4D_NotifyNetworkStateChanged",       L4D_NotifyNetworkStateChanged},
-  {"L4D2_GetCampaignScores",              L4D2_GetCampaignScores},
-  {"L4D2_ScavengeBeginRoundSetupTime",    L4D2_ScavengeBeginRoundSetupTime},
-  {"L4D2_GetVersusMaxCompletionScore",    L4D2_GetVersusMaxCompletionScore},
-  {"L4D2_SetVersusMaxCompletionScore",    L4D2_SetVersusMaxCompletionScore},
-  {"L4D2_ResetMobTimer",                  L4D2_ResetMobTimer},
   {nullptr,                               nullptr}
 };

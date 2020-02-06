@@ -1,5 +1,6 @@
 #include "extension.h"
-#include "forwards.h"
+#include "shared/forwards.h"
+#include "l4d2/forwards.h"
 #include "RegNatives.h"
 
 Left4downtown g_Left4downtown;
@@ -34,7 +35,10 @@ bool Left4downtown::SDK_OnLoad(char *error, size_t maxlen, bool late) {
   sharesys->RegisterLibrary(myself, "left4downtown");
   sharesys->AddDependency(myself, "bintools.ext", true, true);
   sharesys->AddDependency(myself, "sdktools.ext", true, true);
-  sharesys->AddNatives(myself, g_MyNatives);
+  sharesys->AddNatives(myself, g_SharedNatives);
+#if SOURCE_ENGINE == SE_LEFT4DEAD2
+  sharesys->AddNatives(myself, g_L4D2Natives);
+#endif
 
   if (!gameconfs->LoadGameConfigFile("left4downtown.games", &g_pGameConf, error, maxlen)) {
     return false;
@@ -43,9 +47,13 @@ bool Left4downtown::SDK_OnLoad(char *error, size_t maxlen, bool late) {
   CDetourManager::Init(g_pSM->GetScriptingEngine(), g_pGameConf);
   CCallManager::Init(g_pGameConf);
 
-  CreateForwards();
-  CreateDetours();
+  CreateSharedForwards();
+  CreateSharedDetours();
 
+#if SOURCE_ENGINE == SE_LEFT4DEAD2
+  CreateL4D2Forwards();
+  CreateL4D2Detours();
+#endif
   return true;
 }
 
@@ -54,8 +62,13 @@ void Left4downtown::SDK_OnUnload() {
 
   gameconfs->CloseGameConfigFile(g_pGameConf);
 
-  ReleaseForwards();
-  DestroyDetours();
+  ReleaseSharedForwards();
+  DestroySharedDetours();
+
+#if SOURCE_ENGINE == SE_LEFT4DEAD2
+  ReleaseL4D2Forwards();
+  DestroyL4D2Detours();
+#endif
 }
 
 void Left4downtown::SDK_OnAllLoaded() {

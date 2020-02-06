@@ -94,7 +94,8 @@ extern ISDKTools *g_pSDKTools;
 extern ICvar *icvar;
 extern CGlobalVars *gpGlobals;
 
-extern sp_nativeinfo_t g_MyNatives[];
+extern sp_nativeinfo_t g_SharedNatives[];
+extern sp_nativeinfo_t g_L4D2Natives[];
 
 //void OnServerActivate(edict_t *pEdictList, int edictCount, int clientMax);
 
