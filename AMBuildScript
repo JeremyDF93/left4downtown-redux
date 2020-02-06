@@ -468,7 +468,7 @@ BuildScripts = [
 
 if builder.backend == 'amb2':
   BuildScripts += [
-    'scripting/AMBuilder',
+    #'scripting/AMBuilder',
     'PackageScript',
   ]
 
