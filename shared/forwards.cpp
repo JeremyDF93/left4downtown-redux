@@ -8,6 +8,12 @@ CDetour *Detour_SetCampaignScores = nullptr;
 CDetour *Detour_OnFirstSurvivorLeftSafeArea = nullptr;
 CDetour *Detour_TryOfferingTankBot = nullptr;
 CDetour *Detour_OnMobRushStart = nullptr;
+CDetour *Detour_ReplaceTank = nullptr;
+CDetour *Detour_TakeOverBot = nullptr;
+CDetour *Detour_TakeOverZombieBot = nullptr;
+CDetour *Detour_ReplaceWithBot = nullptr;
+CDetour *Detour_SetHumanSpectator = nullptr;
+CDetour *Detour_EndVersusModeRound = nullptr;
 
 IForward *g_pFwdOnSpawnTank = nullptr;
 IForward *g_pFwdOnSpawnWitch = nullptr;
@@ -16,13 +22,12 @@ IForward *g_pFwdOnSetCampaignScores = nullptr;
 IForward *g_pFwdOnFirstSurvivorLeftSafeArea = nullptr;
 IForward *g_pFwdOnTryOfferingTankBot = nullptr;
 IForward *g_pFwdOnMobRushStart = nullptr;
-
-//   _____                   __    _      __  ___
-//  /__  /  ____  ____ ___  / /_  (_)__  /  |/  /___ _____  ____ _____ ____  _____
-//    / /  / __ \/ __ `__ \/ __ \/ / _ \/ /|_/ / __ `/ __ \/ __ `/ __ `/ _ \/ ___/
-//   / /__/ /_/ / / / / / / /_/ / /  __/ /  / / /_/ / / / / /_/ / /_/ /  __/ /
-//  /____/\____/_/ /_/ /_/_.___/_/\___/_/  /_/\__,_/_/ /_/\__,_/\__, /\___/_/
-//                                                             /____/
+IForward *g_pFwdReplaceTank = nullptr;
+IForward *g_pFwdTakeOverBot = nullptr;
+IForward *g_pFwdTakeOverZombieBot = nullptr;
+IForward *g_pFwdReplaceWithBot = nullptr;
+IForward *g_pFwdSetHumanSpectator = nullptr;
+IForward *g_pFwdEndVersusModeRound = nullptr;
 
 // SpawnTank(Vector const&, QAngle const&)
 DETOUR_DECL_MEMBER2(SpawnTank, int, Vector *, pVector, QAngle *, pAngles) {
@@ -75,13 +80,6 @@ DETOUR_DECL_MEMBER2(SpawnWitch, int, Vector *, pVector, QAngle *, pAngles) {
 
   return 0;
 }
-
-//     __________  _                __
-//    / ____/ __ \(_)_______  _____/ /_____  _____
-//   / /   / / / / / ___/ _ \/ ___/ __/ __ \/ ___/
-//  / /___/ /_/ / / /  /  __/ /__/ /_/ /_/ / /
-//  \____/_____/_/_/   \___/\___/\__/\____/_/
-//
 
 // ClearTeamScores(bool)
 DETOUR_DECL_MEMBER1(ClearTeamScores, void, bool, newCampaign) {
@@ -194,6 +192,150 @@ DETOUR_DECL_MEMBER0(OnMobRushStart, void) {
   }
 }
 
+DETOUR_DECL_MEMBER2(ReplaceTank, bool, CTerrorPlayer *, param_1, CTerrorPlayer *, param_2) {
+  if (!g_pFwdReplaceTank) {
+    g_pSM->LogMessage(myself, "OnReplaceTank forward is invalid");
+    return DETOUR_MEMBER_CALL(ReplaceTank)(param_1, param_2);
+  }
+
+  int client_1 = gamehelpers->EntityToBCompatRef(reinterpret_cast<CBaseEntity *>(param_1));
+  int client_2 = gamehelpers->EntityToBCompatRef(reinterpret_cast<CBaseEntity *>(param_2));
+
+#ifdef _DEBUG
+  g_pSM->LogMessage(myself, "ReplaceTank(%d, %d)", client_1, client_2);
+#endif
+
+  cell_t result = Pl_Continue;
+  g_pFwdReplaceTank->PushCell(client_1);
+  g_pFwdReplaceTank->PushCell(client_2);
+  g_pFwdReplaceTank->Execute(&result);
+
+  if (result == Pl_Continue) {
+    return DETOUR_MEMBER_CALL(ReplaceTank)(param_1, param_2);
+  }
+
+  return false;
+}
+
+DETOUR_DECL_MEMBER1(TakeOverBot, bool, bool, param_1) {
+  if (!g_pFwdTakeOverBot) {
+    g_pSM->LogMessage(myself, "OnTakeOverBot forward is invalid");
+    return DETOUR_MEMBER_CALL(TakeOverBot)(param_1);
+  }
+
+  int client = gamehelpers->EntityToBCompatRef(reinterpret_cast<CBaseEntity *>(this));
+
+#ifdef _DEBUG
+  g_pSM->LogMessage(myself, "CTerrorPlayer(%d)::TakeOverBot(%d)", client, param_1);
+#endif
+
+  cell_t result = Pl_Continue;
+  g_pFwdTakeOverBot->PushCell(client);
+  g_pFwdTakeOverBot->PushCell(param_1);
+  g_pFwdTakeOverBot->Execute(&result);
+
+  if (result == Pl_Continue) {
+    return DETOUR_MEMBER_CALL(TakeOverBot)(param_1);
+  }
+
+  return false;
+}
+
+DETOUR_DECL_MEMBER1(TakeOverZombieBot, void, CTerrorPlayer *, param_1) {
+  if (!g_pFwdTakeOverBot) {
+    g_pSM->LogMessage(myself, "OnTakeOverZombieBot forward is invalid");
+    DETOUR_MEMBER_CALL(TakeOverZombieBot)(param_1);
+    return;
+  }
+
+  int client = gamehelpers->EntityToBCompatRef(reinterpret_cast<CBaseEntity *>(this));
+  int bot = gamehelpers->EntityToBCompatRef(reinterpret_cast<CBaseEntity *>(param_1));
+
+#ifdef _DEBUG
+  g_pSM->LogMessage(myself, "CTerrorPlayer(%d)::TakeOverZombieBot(%d)", bot, client);
+#endif
+
+  cell_t result = Pl_Continue;
+  g_pFwdTakeOverZombieBot->PushCell(client);
+  g_pFwdTakeOverZombieBot->PushCell(bot);
+  g_pFwdTakeOverZombieBot->Execute(&result);
+
+  if (result == Pl_Continue) {
+    DETOUR_MEMBER_CALL(TakeOverZombieBot)(param_1);
+  }
+}
+
+// Not a void
+DETOUR_DECL_MEMBER1(ReplaceWithBot, bool, bool, param_1) {
+  if (!g_pFwdTakeOverBot) {
+    g_pSM->LogMessage(myself, "OnReplaceWithBot forward is invalid");
+    return DETOUR_MEMBER_CALL(ReplaceWithBot)(param_1);
+  }
+
+  int client = gamehelpers->EntityToBCompatRef(reinterpret_cast<CBaseEntity *>(this));
+
+#ifdef _DEBUG
+  g_pSM->LogMessage(myself, "CTerrorPlayer(%d)::ReplaceWithBot(%d)", client, param_1);
+#endif
+
+  cell_t result = Pl_Continue;
+  g_pFwdReplaceWithBot->PushCell(client);
+  g_pFwdReplaceWithBot->PushCell(param_1);
+  g_pFwdReplaceWithBot->Execute(&result);
+
+  if (result == Pl_Continue) {
+    return DETOUR_MEMBER_CALL(ReplaceWithBot)(param_1);
+  }
+
+  return false;
+}
+
+DETOUR_DECL_MEMBER1(SetHumanSpectator, bool, CTerrorPlayer *, param_1) {
+  if (!g_pFwdTakeOverBot) {
+    g_pSM->LogMessage(myself, "OnSetHumanSpectator forward is invalid");
+    return DETOUR_MEMBER_CALL(SetHumanSpectator)(param_1);
+  }
+
+  int bot = gamehelpers->EntityToBCompatRef(reinterpret_cast<CBaseEntity *>(this));
+  int client = gamehelpers->EntityToBCompatRef(reinterpret_cast<CBaseEntity *>(param_1));
+
+#ifdef _DEBUG
+  g_pSM->LogMessage(myself, "SurvivorBot(%d)::SetHumanSpectator(%d)", bot, client);
+#endif
+
+  cell_t result = Pl_Continue;
+  g_pFwdSetHumanSpectator->PushCell(bot);
+  g_pFwdSetHumanSpectator->PushCell(client);
+  g_pFwdSetHumanSpectator->Execute(&result);
+
+  if (result == Pl_Continue) {
+    return DETOUR_MEMBER_CALL(SetHumanSpectator)(param_1);
+  }
+
+  return false;
+}
+
+DETOUR_DECL_MEMBER1(EndVersusModeRound, void, bool, param_1) {
+  if (!g_pFwdEndVersusModeRound) {
+    g_pSM->LogMessage(myself, "EndVersusModeRound forward is invalid");
+    DETOUR_MEMBER_CALL(EndVersusModeRound)(param_1);
+    return;
+  }
+
+#ifdef _DEBUG
+  g_pSM->LogMessage(myself, "EndVersusModeRound(%d)", param_1);
+#endif
+
+  cell_t result = Pl_Continue;
+  g_pFwdEndVersusModeRound->PushCell(param_1);
+  g_pFwdEndVersusModeRound->Execute(&result);
+
+  if (result == Pl_Continue) {
+    DETOUR_MEMBER_CALL(EndVersusModeRound)(param_1);
+    return;
+  }
+}
+
 //      ______                 __  _
 //     / ____/_  ______  _____/ /_(_)___  ____  _____
 //    / /_  / / / / __ \/ ___/ __/ / __ \/ __ \/ ___/
@@ -222,6 +364,25 @@ void CreateSharedDetours() {
 
   Detour_OnMobRushStart = DETOUR_CREATE_MEMBER(OnMobRushStart, "OnMobRushStart");
   if (Detour_OnMobRushStart) Detour_OnMobRushStart->EnableDetour();
+
+  Detour_ReplaceTank = DETOUR_CREATE_MEMBER(ReplaceTank, "ReplaceTank");
+  if (Detour_ReplaceTank) Detour_ReplaceTank->EnableDetour();
+
+  Detour_TakeOverBot = DETOUR_CREATE_MEMBER(TakeOverBot, "TakeOverBot");
+  if (Detour_TakeOverBot) Detour_TakeOverBot->EnableDetour();
+
+  Detour_TakeOverZombieBot = DETOUR_CREATE_MEMBER(TakeOverZombieBot, "TakeOverZombieBot");
+  if (Detour_TakeOverZombieBot) Detour_TakeOverZombieBot->EnableDetour();
+
+  Detour_ReplaceWithBot = DETOUR_CREATE_MEMBER(ReplaceWithBot, "ReplaceWithBot");
+  if (Detour_ReplaceWithBot) Detour_ReplaceWithBot->EnableDetour();
+
+  Detour_SetHumanSpectator = DETOUR_CREATE_MEMBER(SetHumanSpectator, "SetHumanSpectator");
+  if (Detour_SetHumanSpectator) Detour_SetHumanSpectator->EnableDetour();
+
+  Detour_EndVersusModeRound = DETOUR_CREATE_MEMBER(EndVersusModeRound, "EndVersusModeRound");
+  if (Detour_EndVersusModeRound) Detour_EndVersusModeRound->EnableDetour();
+
 }
 
 void DestroySharedDetours() {
@@ -232,6 +393,12 @@ void DestroySharedDetours() {
   if (Detour_OnFirstSurvivorLeftSafeArea) Detour_OnFirstSurvivorLeftSafeArea->Destroy();
   if (Detour_TryOfferingTankBot) Detour_TryOfferingTankBot->Destroy();
   if (Detour_OnMobRushStart) Detour_TryOfferingTankBot->Destroy();
+  if (Detour_ReplaceTank) Detour_ReplaceTank->Destroy();
+  if (Detour_TakeOverBot) Detour_TakeOverBot->Destroy();
+  if (Detour_TakeOverZombieBot) Detour_TakeOverZombieBot->Destroy();
+  if (Detour_ReplaceWithBot) Detour_ReplaceWithBot->Destroy();
+  if (Detour_SetHumanSpectator) Detour_SetHumanSpectator->Destroy();
+  if (Detour_EndVersusModeRound) Detour_EndVersusModeRound->Destroy();
 }
 
 void CreateSharedForwards() {
@@ -247,6 +414,18 @@ void CreateSharedForwards() {
       Param_Cell);
   g_pFwdOnTryOfferingTankBot = forwards->CreateForward("L4D_OnTryOfferingTankBot", ET_Event, 0, nullptr);
   g_pFwdOnMobRushStart = forwards->CreateForward("L4D_OnMobRushStart", ET_Event, 0, nullptr);
+  g_pFwdReplaceTank = forwards->CreateForward("L4D_OnReplaceTank", ET_Event, 2, nullptr,
+      Param_Cell, Param_Cell);
+  g_pFwdTakeOverBot = forwards->CreateForward("L4D_OnTakeOverBot", ET_Event, 2, nullptr,
+      Param_Cell, Param_Cell);
+  g_pFwdTakeOverZombieBot = forwards->CreateForward("L4D_OnTakeOverZombieBot", ET_Event, 2, nullptr,
+      Param_Cell, Param_Cell);
+  g_pFwdReplaceWithBot = forwards->CreateForward("L4D_OnReplaceWithBot", ET_Event, 2, nullptr,
+      Param_Cell, Param_Cell);
+  g_pFwdSetHumanSpectator = forwards->CreateForward("L4D_OnSetHumanSpectator", ET_Event, 2, nullptr,
+      Param_Cell, Param_Cell);
+  g_pFwdEndVersusModeRound = forwards->CreateForward("L4D_OnEndVersusModeRound", ET_Event, 1, nullptr,
+      Param_Cell);
 }
 
 void ReleaseSharedForwards() {
@@ -257,4 +436,10 @@ void ReleaseSharedForwards() {
   forwards->ReleaseForward(g_pFwdOnFirstSurvivorLeftSafeArea);
   forwards->ReleaseForward(g_pFwdOnTryOfferingTankBot);
   forwards->ReleaseForward(g_pFwdOnMobRushStart);
+  forwards->ReleaseForward(g_pFwdReplaceTank);
+  forwards->ReleaseForward(g_pFwdTakeOverBot);
+  forwards->ReleaseForward(g_pFwdTakeOverZombieBot);
+  forwards->ReleaseForward(g_pFwdReplaceWithBot);
+  forwards->ReleaseForward(g_pFwdSetHumanSpectator);
+  forwards->ReleaseForward(g_pFwdEndVersusModeRound);
 }

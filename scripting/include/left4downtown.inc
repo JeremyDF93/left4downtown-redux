@@ -24,6 +24,12 @@ forward Action L4D_OnFirstSurvivorLeftSafeArea(int client);
 forward Action L4D_OnEnterGhostState(int client);
 forward Action L4D_OnTryOfferingTankBot();
 forward Action L4D_OnMobRushStart();
+forward Action L4D_OnReplaceTank(int oldTank, int newTank);
+forward Action L4D_OnTakeOverBot(int bot, bool flag);
+forward Action L4D_OnTakeOverZombieBot(int client, int bot);
+forward Action L4D_OnReplaceWithBot(int client, bool flag);
+forward Action L4D_OnSetHumanSpectator(int bot, int client);
+forward Action L4D_OnEndVersusModeRound(bool flag);
 
 native int L4D_GetTeamScore(int logicalTeam, bool campaignScore=false);
 native void L4D_RestartScenarioFromVote(const char[] map);

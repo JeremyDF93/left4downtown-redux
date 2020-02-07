@@ -108,6 +108,36 @@
         "library"   "engine"
         "linux"     "@_ZN11CBaseServer20SetReservationCookieEyPKcz"
       }
+      "ReplaceTank"
+      {
+        "library"   "server"
+        "linux"     "@_ZN13ZombieManager11ReplaceTankEP13CTerrorPlayerS1_"
+      }
+      "TakeOverBot"
+      {
+        "library"   "server"
+        "linux"     "@_ZN13CTerrorPlayer11TakeOverBotEb"
+      }
+      "TakeOverZombieBot"
+      {
+        "library"   "server"
+        "linux"     "@_ZN13CTerrorPlayer17TakeOverZombieBotEPS_"
+      }
+      "ReplaceWithBot"
+      {
+        "library"   "server"
+        "linux"     "@_ZN13CTerrorPlayer14ReplaceWithBotEb"
+      }
+      "SetHumanSpectator"
+      {
+        "library"   "server"
+        "linux"     "@_ZN11SurvivorBot17SetHumanSpectatorEP13CTerrorPlayer"
+      }
+      "EndVersusModeRound"
+      {
+        "library"   "server"
+        "linux"     "@_ZN19CDirectorVersusMode18EndVersusModeRoundEb"
+      }
     }
   }
 }
