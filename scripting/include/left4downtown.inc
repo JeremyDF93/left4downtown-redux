@@ -39,6 +39,10 @@ native void L4D_LobbyUnreserve();
 native bool L4D_LobbyIsReserved();
 native bool L4D_IsMissionFinalMap();
 native void L4D_NotifyNetworkStateChanged();
+native void L4D_TakeOverBot(int client, bool flag=true);
+native void L4D_TakeOverZombieBot(int client, int bot);
+native void L4D_ReplaceWithBot(int client, bool flag=true);
+native void L4D_SetHumanSpectator(int bot, int client);
 
 /***
  *        __   __ __  ____ ___

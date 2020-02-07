@@ -6,5 +6,6 @@ class CTerrorGameRules {};
 class CDirector {};
 class ZombieManager {};
 class CTerrorPlayer {};
+class SurvivorBot {};
 
 #endif // _INCLUDE_LEFT4DOWNTOWN_VCLASSES_PROPER_H_

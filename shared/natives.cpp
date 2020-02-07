@@ -2,8 +2,8 @@
 
 CALL_DECL_MEMBER(CTerrorGameRules, GetTeamScore, int, (int, bool));
 static cell_t L4D_GetTeamScore(IPluginContext *pContext, const cell_t *params) {
-  int logicalTeam = (int) params[1];
-  bool type = (bool) params[2]; // 0 = m_iSurvivorScore
+  int logicalTeam = params[1];
+  bool type = params[2] ? true : false; // 0 = m_iSurvivorScore
                                 // 1 = m_iCampaignScore
 
   if (!g_pGameRules)
@@ -110,6 +110,76 @@ static cell_t L4D_SpawnWitch(IPluginContext *pContext, const cell_t *params) {
   return CALL_INVOKE_MEMBER(g_pZombieManager, SpawnWitch)(&vec, &ang);
 }
 
+CALL_DECL_MEMBER(CTerrorPlayer, TakeOverBot, bool, (bool));
+static cell_t L4D_TakeOverBot(IPluginContext *pContext, const cell_t *params) {
+  if (!g_pZombieManager)
+    return pContext->ThrowNativeError("Error detected in native call (see error logs)");
+  if (!CALL_JOIN_MEMBER(TakeOverBot, "TakeOverBot"))
+    return pContext->ThrowNativeError("Error detected in native call (see error logs)");
+
+  CTerrorPlayer *pBot = reinterpret_cast<CTerrorPlayer *>(UTIL_GetCBaseEntity(params[1], true));
+  bool flag = params[2] ? true : false;
+
+  if (pBot == nullptr)
+    return pContext->ThrowNativeError("Invalid bot client index %d", params[1]);
+
+  return CALL_INVOKE_MEMBER(pBot, TakeOverBot)(flag);
+}
+
+CALL_DECL_MEMBER(CTerrorPlayer, TakeOverZombieBot, void, (CTerrorPlayer *));
+static cell_t L4D_TakeOverZombieBot(IPluginContext *pContext, const cell_t *params) {
+  if (!g_pZombieManager)
+    return pContext->ThrowNativeError("Error detected in native call (see error logs)");
+  if (!CALL_JOIN_MEMBER(TakeOverZombieBot, "TakeOverZombieBot"))
+    return pContext->ThrowNativeError("Error detected in native call (see error logs)");
+
+  CTerrorPlayer *pPlayer = reinterpret_cast<CTerrorPlayer *>(UTIL_GetCBaseEntity(params[1], true));
+  CTerrorPlayer *pBot = reinterpret_cast<CTerrorPlayer *>(UTIL_GetCBaseEntity(params[2], true));
+
+  if (pPlayer == nullptr)
+    return pContext->ThrowNativeError("Invalid client index %d", params[1]);
+  if (pBot == nullptr)
+    return pContext->ThrowNativeError("Invalid bot client index %d", params[2]);
+
+  CALL_INVOKE_MEMBER(pPlayer, TakeOverZombieBot)(pBot);
+
+  return 1;
+}
+
+CALL_DECL_MEMBER(CTerrorPlayer, ReplaceWithBot, bool, (bool));
+static cell_t L4D_ReplaceWithBot(IPluginContext *pContext, const cell_t *params) {
+  if (!g_pZombieManager)
+    return pContext->ThrowNativeError("Error detected in native call (see error logs)");
+  if (!CALL_JOIN_MEMBER(ReplaceWithBot, "ReplaceWithBot"))
+    return pContext->ThrowNativeError("Error detected in native call (see error logs)");
+
+  CTerrorPlayer *pPlayer = reinterpret_cast<CTerrorPlayer *>(UTIL_GetCBaseEntity(params[1], true));
+  bool flag = params[2] ? true : false;
+
+  if (pPlayer == nullptr)
+    return pContext->ThrowNativeError("Invalid client index %d", params[1]);
+
+  return CALL_INVOKE_MEMBER(pPlayer, ReplaceWithBot)(flag);
+}
+
+CALL_DECL_MEMBER(SurvivorBot, SetHumanSpectator, bool, (CTerrorPlayer *));
+static cell_t L4D_SetHumanSpectator(IPluginContext *pContext, const cell_t *params) {
+  if (!g_pZombieManager)
+    return pContext->ThrowNativeError("Error detected in native call (see error logs)");
+  if (!CALL_JOIN_MEMBER(SetHumanSpectator, "SetHumanSpectator"))
+    return pContext->ThrowNativeError("Error detected in native call (see error logs)");
+
+  SurvivorBot *pBot = reinterpret_cast<SurvivorBot *>(UTIL_GetCBaseEntity(params[1], true));
+  CTerrorPlayer *pPlayer = reinterpret_cast<CTerrorPlayer *>(UTIL_GetCBaseEntity(params[2], true));
+
+  if (pBot == nullptr)
+    return pContext->ThrowNativeError("Invalid bot client index %d", params[1]);
+  if (pPlayer == nullptr)
+    return pContext->ThrowNativeError("Invalid client index %d", params[2]);
+
+  return CALL_INVOKE_MEMBER(pBot, SetHumanSpectator)(pPlayer);
+}
+
 sp_nativeinfo_t g_SharedNatives[] = {
   {"L4D_SpawnTank",                       L4D_SpawnTank},
   {"L4D_SpawnWitch",                      L4D_SpawnWitch},
@@ -118,6 +188,9 @@ sp_nativeinfo_t g_SharedNatives[] = {
   {"L4D_LobbyUnreserve",                  L4D_LobbyUnreserve},
   {"L4D_LobbyIsReserved",                 L4D_IsLobbyReserved},
   {"L4D_IsMissionFinalMap",               L4D_IsMissionFinalMap},
-  {"L4D_NotifyNetworkStateChanged",       L4D_NotifyNetworkStateChanged},
+  {"L4D_TakeOverBot",                     L4D_TakeOverBot},
+  {"L4D_TakeOverZombieBot",               L4D_TakeOverZombieBot},
+  {"L4D_ReplaceWithBot",                  L4D_ReplaceWithBot},
+  {"L4D_SetHumanSpectator",               L4D_SetHumanSpectator},
   {nullptr,                               nullptr}
 };

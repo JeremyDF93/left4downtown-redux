@@ -9,6 +9,7 @@
 #include <itoolentity.h>
 #include "vclasses.h"
 #include "vglobals.h"
+#include "util.h"
 
 class Left4downtown :
   public SDKExtension,
