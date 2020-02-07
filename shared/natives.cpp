@@ -113,8 +113,6 @@ static cell_t L4D_SpawnWitch(IPluginContext *pContext, const cell_t *params) {
 
 CALL_DECL_MEMBER(TakeOverBot, bool, (bool));
 static cell_t L4D_TakeOverBot(IPluginContext *pContext, const cell_t *params) {
-  if (!g_pZombieManager)
-    return pContext->ThrowNativeError("Error detected in native call (see error logs)");
   if (!CALL_JOIN_MEMBER(TakeOverBot, "TakeOverBot"))
     return pContext->ThrowNativeError("Error detected in native call (see error logs)");
 
@@ -129,8 +127,6 @@ static cell_t L4D_TakeOverBot(IPluginContext *pContext, const cell_t *params) {
 
 CALL_DECL_MEMBER(TakeOverZombieBot, void, (CTerrorPlayer *));
 static cell_t L4D_TakeOverZombieBot(IPluginContext *pContext, const cell_t *params) {
-  if (!g_pZombieManager)
-    return pContext->ThrowNativeError("Error detected in native call (see error logs)");
   if (!CALL_JOIN_MEMBER(TakeOverZombieBot, "TakeOverZombieBot"))
     return pContext->ThrowNativeError("Error detected in native call (see error logs)");
 
@@ -149,8 +145,6 @@ static cell_t L4D_TakeOverZombieBot(IPluginContext *pContext, const cell_t *para
 
 CALL_DECL_MEMBER(ReplaceWithBot, bool, (bool));
 static cell_t L4D_ReplaceWithBot(IPluginContext *pContext, const cell_t *params) {
-  if (!g_pZombieManager)
-    return pContext->ThrowNativeError("Error detected in native call (see error logs)");
   if (!CALL_JOIN_MEMBER(ReplaceWithBot, "ReplaceWithBot"))
     return pContext->ThrowNativeError("Error detected in native call (see error logs)");
 
@@ -165,8 +159,6 @@ static cell_t L4D_ReplaceWithBot(IPluginContext *pContext, const cell_t *params)
 
 CALL_DECL_MEMBER(SetHumanSpectator, bool, (CTerrorPlayer *));
 static cell_t L4D_SetHumanSpectator(IPluginContext *pContext, const cell_t *params) {
-  if (!g_pZombieManager)
-    return pContext->ThrowNativeError("Error detected in native call (see error logs)");
   if (!CALL_JOIN_MEMBER(SetHumanSpectator, "SetHumanSpectator"))
     return pContext->ThrowNativeError("Error detected in native call (see error logs)");
 
