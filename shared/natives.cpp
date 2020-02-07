@@ -72,9 +72,9 @@ static cell_t L4D_NotifyNetworkStateChanged(IPluginContext *pContext, const cell
   return 1;
 }
 
-CALL_DECL_MEMBER(CTerrorGameRules, SpawnTank, int, (Vector *, QAngle *));
+CALL_DECL_MEMBER(ZombieManager, SpawnTank, int, (Vector *, QAngle *));
 static cell_t L4D_SpawnTank(IPluginContext *pContext, const cell_t *params) {
-  if (!g_pGameRules)
+  if (!g_pZombieManager)
     return pContext->ThrowNativeError("Error detected in native call (see error logs)");
   if (!CALL_JOIN_MEMBER(SpawnTank, "SpawnTank"))
     return pContext->ThrowNativeError("Error detected in native call (see error logs)");
@@ -88,12 +88,12 @@ static cell_t L4D_SpawnTank(IPluginContext *pContext, const cell_t *params) {
   Vector vec(sp_ctof(vec_addr[0]), sp_ctof(vec_addr[1]), sp_ctof(vec_addr[2]));
   QAngle ang(sp_ctof(ang_addr[0]), sp_ctof(ang_addr[1]), sp_ctof(ang_addr[2]));
 
-  return CALL_INVOKE_MEMBER(g_pGameRules, SpawnTank)(&vec, &ang);
+  return CALL_INVOKE_MEMBER(g_pZombieManager, SpawnTank)(&vec, &ang);
 }
 
-CALL_DECL_MEMBER(CTerrorGameRules, SpawnWitch, int, (Vector *, QAngle *));
+CALL_DECL_MEMBER(ZombieManager, SpawnWitch, int, (Vector *, QAngle *));
 static cell_t L4D_SpawnWitch(IPluginContext *pContext, const cell_t *params) {
-  if (!g_pGameRules)
+  if (!g_pZombieManager)
     return pContext->ThrowNativeError("Error detected in native call (see error logs)");
   if (!CALL_JOIN_MEMBER(SpawnWitch, "SpawnWitch"))
     return pContext->ThrowNativeError("Error detected in native call (see error logs)");
@@ -107,7 +107,7 @@ static cell_t L4D_SpawnWitch(IPluginContext *pContext, const cell_t *params) {
   Vector vec(sp_ctof(vec_addr[0]), sp_ctof(vec_addr[1]), sp_ctof(vec_addr[2]));
   QAngle ang(sp_ctof(ang_addr[0]), sp_ctof(ang_addr[1]), sp_ctof(ang_addr[2]));
 
-  return CALL_INVOKE_MEMBER(g_pGameRules, SpawnWitch)(&vec, &ang);
+  return CALL_INVOKE_MEMBER(g_pZombieManager, SpawnWitch)(&vec, &ang);
 }
 
 sp_nativeinfo_t g_SharedNatives[] = {
