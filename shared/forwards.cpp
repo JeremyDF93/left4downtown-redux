@@ -192,67 +192,67 @@ DETOUR_DECL_MEMBER0(OnMobRushStart, void) {
   }
 }
 
-DETOUR_DECL_MEMBER2(ReplaceTank, bool, CTerrorPlayer *, param_1, CTerrorPlayer *, param_2) {
+/* ZombieManager::ReplaceTank(CTerrorPlayer*, CTerrorPlayer*) */
+DETOUR_DECL_MEMBER2(ReplaceTank, bool, CTerrorPlayer *, pOldTank, CTerrorPlayer *, pNewTank) {
   if (!g_pFwdReplaceTank) {
-    g_pSM->LogMessage(myself, "OnReplaceTank forward is invalid");
-    return DETOUR_MEMBER_CALL(ReplaceTank)(param_1, param_2);
+    return DETOUR_MEMBER_CALL(ReplaceTank)(pOldTank, pNewTank);
   }
 
-  int client_1 = gamehelpers->EntityToBCompatRef(reinterpret_cast<CBaseEntity *>(param_1));
-  int client_2 = gamehelpers->EntityToBCompatRef(reinterpret_cast<CBaseEntity *>(param_2));
+  int oldTank = gamehelpers->EntityToBCompatRef(reinterpret_cast<CBaseEntity *>(pOldTank));
+  int newTank = gamehelpers->EntityToBCompatRef(reinterpret_cast<CBaseEntity *>(pNewTank));
 
 #ifdef _DEBUG
-  g_pSM->LogMessage(myself, "ReplaceTank(%d, %d)", client_1, client_2);
+  g_pSM->LogMessage(myself, "ReplaceTank(%d, %d)", oldTank, newTank);
 #endif
 
   cell_t result = Pl_Continue;
-  g_pFwdReplaceTank->PushCell(client_1);
-  g_pFwdReplaceTank->PushCell(client_2);
+  g_pFwdReplaceTank->PushCell(oldTank);
+  g_pFwdReplaceTank->PushCell(newTank);
   g_pFwdReplaceTank->Execute(&result);
 
   if (result == Pl_Continue) {
-    return DETOUR_MEMBER_CALL(ReplaceTank)(param_1, param_2);
+    return DETOUR_MEMBER_CALL(ReplaceTank)(pOldTank, pNewTank);
   }
 
   return false;
 }
 
-DETOUR_DECL_MEMBER1(TakeOverBot, bool, bool, param_1) {
+/* CTerrorPlayer::TakeOverBot(bool) */
+DETOUR_DECL_MEMBER1(TakeOverBot, bool, bool, flag) {
   if (!g_pFwdTakeOverBot) {
-    g_pSM->LogMessage(myself, "OnTakeOverBot forward is invalid");
-    return DETOUR_MEMBER_CALL(TakeOverBot)(param_1);
+    return DETOUR_MEMBER_CALL(TakeOverBot)(flag);
   }
 
-  int client = gamehelpers->EntityToBCompatRef(reinterpret_cast<CBaseEntity *>(this));
+  int bot = gamehelpers->EntityToBCompatRef(reinterpret_cast<CBaseEntity *>(this));
 
 #ifdef _DEBUG
-  g_pSM->LogMessage(myself, "CTerrorPlayer(%d)::TakeOverBot(%d)", client, param_1);
+  g_pSM->LogMessage(myself, "CTerrorPlayer(%d)::TakeOverBot(%d)", bot, flag);
 #endif
 
   cell_t result = Pl_Continue;
-  g_pFwdTakeOverBot->PushCell(client);
-  g_pFwdTakeOverBot->PushCell(param_1);
+  g_pFwdTakeOverBot->PushCell(bot);
+  g_pFwdTakeOverBot->PushCell(flag);
   g_pFwdTakeOverBot->Execute(&result);
 
   if (result == Pl_Continue) {
-    return DETOUR_MEMBER_CALL(TakeOverBot)(param_1);
+    return DETOUR_MEMBER_CALL(TakeOverBot)(flag);
   }
 
   return false;
 }
 
-DETOUR_DECL_MEMBER1(TakeOverZombieBot, void, CTerrorPlayer *, param_1) {
+/* CTerrorPlayer::TakeOverZombieBot(CTerrorPlayer*) */
+DETOUR_DECL_MEMBER1(TakeOverZombieBot, void, CTerrorPlayer *, pBot) {
   if (!g_pFwdTakeOverBot) {
-    g_pSM->LogMessage(myself, "OnTakeOverZombieBot forward is invalid");
-    DETOUR_MEMBER_CALL(TakeOverZombieBot)(param_1);
+    DETOUR_MEMBER_CALL(TakeOverZombieBot)(pBot);
     return;
   }
 
   int client = gamehelpers->EntityToBCompatRef(reinterpret_cast<CBaseEntity *>(this));
-  int bot = gamehelpers->EntityToBCompatRef(reinterpret_cast<CBaseEntity *>(param_1));
+  int bot = gamehelpers->EntityToBCompatRef(reinterpret_cast<CBaseEntity *>(pBot));
 
 #ifdef _DEBUG
-  g_pSM->LogMessage(myself, "CTerrorPlayer(%d)::TakeOverZombieBot(%d)", bot, client);
+  g_pSM->LogMessage(myself, "CTerrorPlayer(%d)::TakeOverZombieBot(%d)", client, bot);
 #endif
 
   cell_t result = Pl_Continue;
@@ -261,43 +261,42 @@ DETOUR_DECL_MEMBER1(TakeOverZombieBot, void, CTerrorPlayer *, param_1) {
   g_pFwdTakeOverZombieBot->Execute(&result);
 
   if (result == Pl_Continue) {
-    DETOUR_MEMBER_CALL(TakeOverZombieBot)(param_1);
+    DETOUR_MEMBER_CALL(TakeOverZombieBot)(pBot);
   }
 }
 
-// Not a void
-DETOUR_DECL_MEMBER1(ReplaceWithBot, bool, bool, param_1) {
+/* CTerrorPlayer::ReplaceWithBot(bool) */
+DETOUR_DECL_MEMBER1(ReplaceWithBot, bool, bool, flag) {
   if (!g_pFwdTakeOverBot) {
-    g_pSM->LogMessage(myself, "OnReplaceWithBot forward is invalid");
-    return DETOUR_MEMBER_CALL(ReplaceWithBot)(param_1);
+    return DETOUR_MEMBER_CALL(ReplaceWithBot)(flag);
   }
 
   int client = gamehelpers->EntityToBCompatRef(reinterpret_cast<CBaseEntity *>(this));
 
 #ifdef _DEBUG
-  g_pSM->LogMessage(myself, "CTerrorPlayer(%d)::ReplaceWithBot(%d)", client, param_1);
+  g_pSM->LogMessage(myself, "CTerrorPlayer(%d)::ReplaceWithBot(%d)", client, flag);
 #endif
 
   cell_t result = Pl_Continue;
   g_pFwdReplaceWithBot->PushCell(client);
-  g_pFwdReplaceWithBot->PushCell(param_1);
+  g_pFwdReplaceWithBot->PushCell(flag);
   g_pFwdReplaceWithBot->Execute(&result);
 
   if (result == Pl_Continue) {
-    return DETOUR_MEMBER_CALL(ReplaceWithBot)(param_1);
+    return DETOUR_MEMBER_CALL(ReplaceWithBot)(flag);
   }
 
   return false;
 }
 
-DETOUR_DECL_MEMBER1(SetHumanSpectator, bool, CTerrorPlayer *, param_1) {
+/* SurvivorBot::SetHumanSpectator(CTerrorPlayer*) */
+DETOUR_DECL_MEMBER1(SetHumanSpectator, bool, CTerrorPlayer *, pPlayer) {
   if (!g_pFwdTakeOverBot) {
-    g_pSM->LogMessage(myself, "OnSetHumanSpectator forward is invalid");
-    return DETOUR_MEMBER_CALL(SetHumanSpectator)(param_1);
+    return DETOUR_MEMBER_CALL(SetHumanSpectator)(pPlayer);
   }
 
   int bot = gamehelpers->EntityToBCompatRef(reinterpret_cast<CBaseEntity *>(this));
-  int client = gamehelpers->EntityToBCompatRef(reinterpret_cast<CBaseEntity *>(param_1));
+  int client = gamehelpers->EntityToBCompatRef(reinterpret_cast<CBaseEntity *>(pPlayer));
 
 #ifdef _DEBUG
   g_pSM->LogMessage(myself, "SurvivorBot(%d)::SetHumanSpectator(%d)", bot, client);
@@ -309,29 +308,29 @@ DETOUR_DECL_MEMBER1(SetHumanSpectator, bool, CTerrorPlayer *, param_1) {
   g_pFwdSetHumanSpectator->Execute(&result);
 
   if (result == Pl_Continue) {
-    return DETOUR_MEMBER_CALL(SetHumanSpectator)(param_1);
+    return DETOUR_MEMBER_CALL(SetHumanSpectator)(pPlayer);
   }
 
   return false;
 }
 
-DETOUR_DECL_MEMBER1(EndVersusModeRound, void, bool, param_1) {
+/* CDirectorVersusMode::EndVersusModeRound(bool) */
+DETOUR_DECL_MEMBER1(EndVersusModeRound, void, bool, survived) {
   if (!g_pFwdEndVersusModeRound) {
-    g_pSM->LogMessage(myself, "EndVersusModeRound forward is invalid");
-    DETOUR_MEMBER_CALL(EndVersusModeRound)(param_1);
+    DETOUR_MEMBER_CALL(EndVersusModeRound)(survived);
     return;
   }
 
 #ifdef _DEBUG
-  g_pSM->LogMessage(myself, "EndVersusModeRound(%d)", param_1);
+  g_pSM->LogMessage(myself, "EndVersusModeRound(%d)", survived);
 #endif
 
   cell_t result = Pl_Continue;
-  g_pFwdEndVersusModeRound->PushCell(param_1);
+  g_pFwdEndVersusModeRound->PushCell(survived);
   g_pFwdEndVersusModeRound->Execute(&result);
 
   if (result == Pl_Continue) {
-    DETOUR_MEMBER_CALL(EndVersusModeRound)(param_1);
+    DETOUR_MEMBER_CALL(EndVersusModeRound)(survived);
     return;
   }
 }
