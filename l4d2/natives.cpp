@@ -11,7 +11,7 @@ static cell_t L4D2_GetCampaignScores(IPluginContext *pContext, const cell_t *par
   return 1;
 }
 
-CALL_DECL_MEMBER(CDirector, OnBeginRoundSetupTime, void, (void));
+CALL_DECL_MEMBER(OnBeginRoundSetupTime, void, (void));
 static cell_t L4D2_ScavengeBeginRoundSetupTime(IPluginContext *pContext, const cell_t *params) {
   if (!g_pDirector)
     return pContext->ThrowNativeError("Error detected in native call (see error logs)");
@@ -31,7 +31,7 @@ static cell_t L4D2_SetVersusMaxCompletionScore(IPluginContext *pContext, const c
   return 1;
 }
 
-CALL_DECL_MEMBER(CDirector, ResetMobTimer, void, (void));
+CALL_DECL_MEMBER(ResetMobTimer, void, (void));
 static cell_t L4D2_ResetMobTimer(IPluginContext *pContext, const cell_t *params) {
   if (!g_pDirector)
     return pContext->ThrowNativeError("Error detected in native call (see error logs)");
