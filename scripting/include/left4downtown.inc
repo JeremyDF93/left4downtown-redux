@@ -31,6 +31,8 @@ forward Action L4D_OnReplaceWithBot(int client, bool flag);
 forward Action L4D_OnSetHumanSpectator(int bot, int client);
 forward Action L4D_OnEndVersusModeRound(bool survived);
 
+native int L4D_SpawnTank(const float vector[3], const float qangle[3]);
+native int L4D_SpawnWitch(const float vector[3], const float qangle[3]);
 native int L4D_GetTeamScore(int logicalTeam, bool campaignScore=false);
 native void L4D_RestartScenarioFromVote(const char[] map);
 native void L4D_LobbyUnreserve();

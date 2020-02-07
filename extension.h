@@ -6,6 +6,8 @@
 #include "CCall/calls.h"
 #include <IBinTools.h>
 #include <ISDKTools.h>
+#include <itoolentity.h>
+#include "vclasses.h"
 #include "vglobals.h"
 
 class Left4downtown :

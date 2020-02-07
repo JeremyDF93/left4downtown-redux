@@ -67,14 +67,52 @@ static cell_t L4D_NotifyNetworkStateChanged(IPluginContext *pContext, const cell
   if (!CALL_JOIN_MEMBER(IsMissionFinalMap, "NotifyNetworkStateChanged"))
     return pContext->ThrowNativeError("Error detected in native call (see error logs)");
 
-  char *map = nullptr;
-  pContext->LocalToString(params[1], &map);
   CALL_INVOKE_MEMBER(g_pGameRules, NotifyNetworkStateChanged)();
 
   return 1;
 }
 
+CALL_DECL_MEMBER(CTerrorGameRules, SpawnTank, int, (Vector *, QAngle *));
+static cell_t L4D_SpawnTank(IPluginContext *pContext, const cell_t *params) {
+  if (!g_pGameRules)
+    return pContext->ThrowNativeError("Error detected in native call (see error logs)");
+  if (!CALL_JOIN_MEMBER(SpawnTank, "SpawnTank"))
+    return pContext->ThrowNativeError("Error detected in native call (see error logs)");
+
+  cell_t *vec_addr;
+  pContext->LocalToPhysAddr(params[1], &vec_addr);
+
+  cell_t *ang_addr;
+  pContext->LocalToPhysAddr(params[2], &ang_addr);
+
+  Vector vec(sp_ctof(vec_addr[0]), sp_ctof(vec_addr[1]), sp_ctof(vec_addr[2]));
+  QAngle ang(sp_ctof(ang_addr[0]), sp_ctof(ang_addr[1]), sp_ctof(ang_addr[2]));
+
+  return CALL_INVOKE_MEMBER(g_pGameRules, SpawnTank)(&vec, &ang);
+}
+
+CALL_DECL_MEMBER(CTerrorGameRules, SpawnWitch, int, (Vector *, QAngle *));
+static cell_t L4D_SpawnWitch(IPluginContext *pContext, const cell_t *params) {
+  if (!g_pGameRules)
+    return pContext->ThrowNativeError("Error detected in native call (see error logs)");
+  if (!CALL_JOIN_MEMBER(SpawnWitch, "SpawnWitch"))
+    return pContext->ThrowNativeError("Error detected in native call (see error logs)");
+
+  cell_t *vec_addr;
+  pContext->LocalToPhysAddr(params[1], &vec_addr);
+
+  cell_t *ang_addr;
+  pContext->LocalToPhysAddr(params[2], &ang_addr);
+
+  Vector vec(sp_ctof(vec_addr[0]), sp_ctof(vec_addr[1]), sp_ctof(vec_addr[2]));
+  QAngle ang(sp_ctof(ang_addr[0]), sp_ctof(ang_addr[1]), sp_ctof(ang_addr[2]));
+
+  return CALL_INVOKE_MEMBER(g_pGameRules, SpawnWitch)(&vec, &ang);
+}
+
 sp_nativeinfo_t g_SharedNatives[] = {
+  {"L4D_SpawnTank",                       L4D_SpawnTank},
+  {"L4D_SpawnWitch",                      L4D_SpawnWitch},
   {"L4D_GetTeamScore",                    L4D_GetTeamScore},
   {"L4D_RestartScenarioFromVote",         L4D_RestartScenarioFromVote},
   {"L4D_LobbyUnreserve",                  L4D_LobbyUnreserve},

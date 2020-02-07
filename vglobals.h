@@ -3,11 +3,6 @@
 
 #include "extension.h"
 
-class CBaseServer {};
-class CTerrorGameRules {};
-class CDirector {};
-class ZombieManager {};
-
 extern CTerrorGameRules *g_pGameRules;
 extern CBaseServer *g_pServer;
 extern CDirector *g_pDirector;

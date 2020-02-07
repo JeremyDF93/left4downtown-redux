@@ -98,20 +98,6 @@ bool Left4downtown::SDK_OnMetamodUnload(char *error, size_t maxlen) {
   return true;
 }
 
-// void Left4downtown::OnPluginLoaded(IPlugin *plugin) {
-//   if (!m_bDetoursEnabled) {
-//     m_bDetoursEnabled = true;
-//     CreateDetours();
-//   }
-// }
-
-// void Left4downtown::OnPluginUnloaded(IPlugin *plugin) {
-//   if (m_bDetoursEnabled) {
-//     m_bDetoursEnabled = false;
-//     DestroyDetours();
-//   }
-// }
-
 void Left4downtown::OnServerActivate(edict_t *pEdictList, int edictCount, int clientMax) {
   InitializeValveGlobals();
 }
