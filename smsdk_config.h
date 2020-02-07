@@ -8,7 +8,7 @@
 # define SMEXT_CONF_VERSION       "1.0.0"
 #endif
 
-#define SMEXT_CONF_NAME           "Left 4 Downtown"
+#define SMEXT_CONF_NAME           "Left 4 Downtown Redux"
 #define SMEXT_CONF_DESCRIPTION    "Extention for L4D1/2"
 #define SMEXT_CONF_AUTHOR         "Kiwi, JeremyDF93"
 #define SMEXT_CONF_URL            "http://praisethemoon.com/"

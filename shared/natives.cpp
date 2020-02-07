@@ -1,5 +1,4 @@
 #include "extension.h"
-#include "RegNatives.h"
 
 CALL_DECL_MEMBER(CTerrorGameRules, GetTeamScore, int, (int, bool));
 static cell_t L4D_GetTeamScore(IPluginContext *pContext, const cell_t *params) {

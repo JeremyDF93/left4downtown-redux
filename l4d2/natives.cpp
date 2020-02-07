@@ -1,5 +1,4 @@
 #include "extension.h"
-#include "RegNatives.h"
 
 static cell_t L4D2_GetCampaignScores(IPluginContext *pContext, const cell_t *params) {
   cell_t *addr;

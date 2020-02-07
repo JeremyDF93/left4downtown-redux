@@ -15,8 +15,8 @@ CGlobalVars *gpGlobals = nullptr;
 
 bool m_bDetoursEnabled;
 
-ConVar left4downtown_version("left4downtown_version", SMEXT_CONF_VERSION, FCVAR_SPONLY|FCVAR_NOTIFY,
-    "Left 4 Downtown Version");
+ConVar left4downtown_version("left4downtown_redux_version", SMEXT_CONF_VERSION, FCVAR_SPONLY|FCVAR_NOTIFY,
+    "Left 4 Downtown redux version");
 ConVar l4d_maxplayers("l4d_maxplayers", "-1", FCVAR_SPONLY|FCVAR_NOTIFY,
     "Overrides maxplayers with this value");
 
@@ -54,6 +54,11 @@ bool Left4downtown::SDK_OnLoad(char *error, size_t maxlen, bool late) {
   CreateL4D2Forwards();
   CreateL4D2Detours();
 #endif
+
+#ifdef _DEBUG
+  smutils->LogMessage(myself, "Left 4 Downtown Redux v%s loaded", left4downtown_version.GetString());
+#endif
+
   return true;
 }
 
