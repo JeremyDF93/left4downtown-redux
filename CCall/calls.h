@@ -3,14 +3,14 @@
 
 #include "extension.h"
 
-#define CALL_DECL_MEMBER(cls, func, ret, args) \
-  class func##Class : public cls { \
+#define CALL_DECL_MEMBER(name, ret, args) \
+  class name##Class { \
   public: \
-    static ret (cls::*p##func)args; \
+    static ret (name##Class::*p##name)args; \
   }; \
-  ret (cls::*p##func)args = nullptr;
-#define CALL_JOIN_MEMBER(func, signame) (*((void **)&p##func) = CCallManager::GetAddress(signame))
-#define CALL_INVOKE_MEMBER(obj, func) (obj->*p##func)
+  ret (name##Class::*p##name)args = nullptr;
+#define CALL_JOIN_MEMBER(name, signame) (*((void **)&p##name) = CCallManager::GetAddress(signame))
+#define CALL_INVOKE_MEMBER(obj, name) (reinterpret_cast<name##Class *>(obj)->*p##name)
 
 class CCallManager {
   public:
