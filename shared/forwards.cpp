@@ -342,103 +342,186 @@ DETOUR_DECL_MEMBER1(EndVersusModeRound, void, bool, survived) {
 //  /_/    \__,_/_/ /_/\___/\__/_/\____/_/ /_/____/
 //
 
-void CreateSharedDetours() {
+void CreateSharedForwards() {
   Detour_SpawnTank = DETOUR_CREATE_MEMBER(SpawnTank, "SpawnTank");
-  if (Detour_SpawnTank) Detour_SpawnTank->EnableDetour();
+  if (Detour_SpawnTank) {
+    g_pFwdOnSpawnTank = forwards->CreateForward("L4D_OnSpawnTank", ET_Event, 2, nullptr,
+        Param_Array, Param_Array);
+    Detour_SpawnTank->EnableDetour();
+  } else {
+    smutils->LogError(myself, "\"%s\" detour could not be initialized", "SpawnTank");
+  }
 
   Detour_SpawnWitch = DETOUR_CREATE_MEMBER(SpawnWitch, "SpawnWitch");
-  if (Detour_SpawnWitch) Detour_SpawnWitch->EnableDetour();
+  if (Detour_SpawnWitch) {
+    g_pFwdOnSpawnWitch = forwards->CreateForward("L4D_OnSpawnWitch", ET_Event, 2, nullptr,
+        Param_Array, Param_Array);
+    Detour_SpawnWitch->EnableDetour();
+  } else {
+    smutils->LogError(myself, "\"%s\" detour could not be initialized", "SpawnWitch");
+  }
 
   Detour_ClearTeamScores = DETOUR_CREATE_MEMBER(ClearTeamScores, "ClearTeamScores");
-  if (Detour_ClearTeamScores) Detour_ClearTeamScores->EnableDetour();
+  if (Detour_ClearTeamScores) {
+    g_pFwdOnClearTeamScores = forwards->CreateForward("L4D_OnClearTeamScores", ET_Event, 1, nullptr,
+        Param_Cell);
+    Detour_ClearTeamScores->EnableDetour();
+  } else {
+    smutils->LogError(myself, "\"%s\" detour could not be initialized", "ClearTeamScores");
+  }
 
   Detour_SetCampaignScores = DETOUR_CREATE_MEMBER(SetCampaignScores, "SetCampaignScores");
-  if (Detour_SetCampaignScores) Detour_SetCampaignScores->EnableDetour();
+  if (Detour_SetCampaignScores) {
+    g_pFwdOnSetCampaignScores = forwards->CreateForward("L4D_OnSetCampaignScores", ET_Event, 2, nullptr,
+        Param_CellByRef, Param_CellByRef);
+    Detour_SetCampaignScores->EnableDetour();
+  } else {
+    smutils->LogError(myself, "\"%s\" detour could not be initialized", "SetCampaignScores");
+  }
 
   Detour_OnFirstSurvivorLeftSafeArea = DETOUR_CREATE_MEMBER(OnFirstSurvivorLeftSafeArea, "OnFirstSurvivorLeftSafeArea");
-  if (Detour_OnFirstSurvivorLeftSafeArea) Detour_OnFirstSurvivorLeftSafeArea->EnableDetour();
+  if (Detour_OnFirstSurvivorLeftSafeArea) {
+    g_pFwdOnFirstSurvivorLeftSafeArea = forwards->CreateForward("L4D_OnFirstSurvivorLeftSafeArea", ET_Event, 1, nullptr,
+        Param_Cell);
+    Detour_OnFirstSurvivorLeftSafeArea->EnableDetour();
+  } else {
+    smutils->LogError(myself, "\"%s\" detour could not be initialized", "OnFirstSurvivorLeftSafeArea");
+  }
 
   Detour_TryOfferingTankBot = DETOUR_CREATE_MEMBER(TryOfferingTankBot, "TryOfferingTankBot");
-  if (Detour_TryOfferingTankBot) Detour_TryOfferingTankBot->EnableDetour();
+  if (Detour_TryOfferingTankBot) {
+    g_pFwdOnTryOfferingTankBot = forwards->CreateForward("L4D_OnTryOfferingTankBot", ET_Event, 0, nullptr);
+    Detour_TryOfferingTankBot->EnableDetour();
+  } else {
+    smutils->LogError(myself, "\"%s\" detour could not be initialized", "TryOfferingTankBot");
+  }
 
   Detour_OnMobRushStart = DETOUR_CREATE_MEMBER(OnMobRushStart, "OnMobRushStart");
-  if (Detour_OnMobRushStart) Detour_OnMobRushStart->EnableDetour();
+  if (Detour_OnMobRushStart) {
+    g_pFwdOnMobRushStart = forwards->CreateForward("L4D_OnMobRushStart", ET_Event, 0, nullptr);
+    Detour_OnMobRushStart->EnableDetour();
+  } else {
+    smutils->LogError(myself, "\"%s\" detour could not be initialized", "OnMobRushStart");
+  }
 
   Detour_ReplaceTank = DETOUR_CREATE_MEMBER(ReplaceTank, "ReplaceTank");
-  if (Detour_ReplaceTank) Detour_ReplaceTank->EnableDetour();
+  if (Detour_ReplaceTank) {
+    g_pFwdReplaceTank = forwards->CreateForward("L4D_OnReplaceTank", ET_Event, 2, nullptr,
+        Param_Cell, Param_Cell);
+    Detour_ReplaceTank->EnableDetour();
+  } else {
+    smutils->LogError(myself, "\"%s\" detour could not be initialized", "ReplaceTank");
+  }
 
   Detour_TakeOverBot = DETOUR_CREATE_MEMBER(TakeOverBot, "TakeOverBot");
-  if (Detour_TakeOverBot) Detour_TakeOverBot->EnableDetour();
+  if (Detour_TakeOverBot) {
+    g_pFwdTakeOverBot = forwards->CreateForward("L4D_OnTakeOverBot", ET_Event, 2, nullptr,
+        Param_Cell, Param_Cell);
+    Detour_TakeOverBot->EnableDetour();
+  } else {
+    smutils->LogError(myself, "\"%s\" detour could not be initialized", "TakeOverBot");
+  }
 
   Detour_TakeOverZombieBot = DETOUR_CREATE_MEMBER(TakeOverZombieBot, "TakeOverZombieBot");
-  if (Detour_TakeOverZombieBot) Detour_TakeOverZombieBot->EnableDetour();
+  if (Detour_TakeOverZombieBot) {
+    g_pFwdTakeOverZombieBot = forwards->CreateForward("L4D_OnTakeOverZombieBot", ET_Event, 2, nullptr,
+        Param_Cell, Param_Cell);
+    Detour_TakeOverZombieBot->EnableDetour();
+  } else {
+    smutils->LogError(myself, "\"%s\" detour could not be initialized", "TakeOverZombieBot");
+  }
 
   Detour_ReplaceWithBot = DETOUR_CREATE_MEMBER(ReplaceWithBot, "ReplaceWithBot");
-  if (Detour_ReplaceWithBot) Detour_ReplaceWithBot->EnableDetour();
+  if (Detour_ReplaceWithBot) {
+    g_pFwdReplaceWithBot = forwards->CreateForward("L4D_OnReplaceWithBot", ET_Event, 2, nullptr,
+        Param_Cell, Param_Cell);
+    Detour_ReplaceWithBot->EnableDetour();
+  } else {
+    smutils->LogError(myself, "\"%s\" detour could not be initialized", "ReplaceWithBot");
+  }
 
   Detour_SetHumanSpectator = DETOUR_CREATE_MEMBER(SetHumanSpectator, "SetHumanSpectator");
-  if (Detour_SetHumanSpectator) Detour_SetHumanSpectator->EnableDetour();
+  if (Detour_SetHumanSpectator) {
+    g_pFwdSetHumanSpectator = forwards->CreateForward("L4D_OnSetHumanSpectator", ET_Event, 2, nullptr,
+        Param_Cell, Param_Cell);
+    Detour_SetHumanSpectator->EnableDetour();
+  } else {
+    smutils->LogError(myself, "\"%s\" detour could not be initialized", "SetHumanSpectator");
+  }
 
   Detour_EndVersusModeRound = DETOUR_CREATE_MEMBER(EndVersusModeRound, "EndVersusModeRound");
-  if (Detour_EndVersusModeRound) Detour_EndVersusModeRound->EnableDetour();
-
-}
-
-void DestroySharedDetours() {
-  if (Detour_SpawnTank) Detour_SpawnTank->Destroy();
-  if (Detour_SpawnWitch) Detour_SpawnWitch->Destroy();
-  if (Detour_ClearTeamScores) Detour_ClearTeamScores->Destroy();
-  if (Detour_SetCampaignScores) Detour_SetCampaignScores->Destroy();
-  if (Detour_OnFirstSurvivorLeftSafeArea) Detour_OnFirstSurvivorLeftSafeArea->Destroy();
-  if (Detour_TryOfferingTankBot) Detour_TryOfferingTankBot->Destroy();
-  if (Detour_OnMobRushStart) Detour_TryOfferingTankBot->Destroy();
-  if (Detour_ReplaceTank) Detour_ReplaceTank->Destroy();
-  if (Detour_TakeOverBot) Detour_TakeOverBot->Destroy();
-  if (Detour_TakeOverZombieBot) Detour_TakeOverZombieBot->Destroy();
-  if (Detour_ReplaceWithBot) Detour_ReplaceWithBot->Destroy();
-  if (Detour_SetHumanSpectator) Detour_SetHumanSpectator->Destroy();
-  if (Detour_EndVersusModeRound) Detour_EndVersusModeRound->Destroy();
-}
-
-void CreateSharedForwards() {
-  g_pFwdOnSpawnTank = forwards->CreateForward("L4D_OnSpawnTank", ET_Event, 2, nullptr,
-      Param_Array, Param_Array);
-  g_pFwdOnSpawnWitch = forwards->CreateForward("L4D_OnSpawnWitch", ET_Event, 2, nullptr,
-      Param_Array, Param_Array);
-  g_pFwdOnClearTeamScores = forwards->CreateForward("L4D_OnClearTeamScores", ET_Event, 1, nullptr,
-      Param_Cell);
-  g_pFwdOnSetCampaignScores = forwards->CreateForward("L4D_OnSetCampaignScores", ET_Event, 2, nullptr,
-      Param_CellByRef, Param_CellByRef);
-  g_pFwdOnFirstSurvivorLeftSafeArea = forwards->CreateForward("L4D_OnFirstSurvivorLeftSafeArea", ET_Event, 1, nullptr,
-      Param_Cell);
-  g_pFwdOnTryOfferingTankBot = forwards->CreateForward("L4D_OnTryOfferingTankBot", ET_Event, 0, nullptr);
-  g_pFwdOnMobRushStart = forwards->CreateForward("L4D_OnMobRushStart", ET_Event, 0, nullptr);
-  g_pFwdReplaceTank = forwards->CreateForward("L4D_OnReplaceTank", ET_Event, 2, nullptr,
-      Param_Cell, Param_Cell);
-  g_pFwdTakeOverBot = forwards->CreateForward("L4D_OnTakeOverBot", ET_Event, 2, nullptr,
-      Param_Cell, Param_Cell);
-  g_pFwdTakeOverZombieBot = forwards->CreateForward("L4D_OnTakeOverZombieBot", ET_Event, 2, nullptr,
-      Param_Cell, Param_Cell);
-  g_pFwdReplaceWithBot = forwards->CreateForward("L4D_OnReplaceWithBot", ET_Event, 2, nullptr,
-      Param_Cell, Param_Cell);
-  g_pFwdSetHumanSpectator = forwards->CreateForward("L4D_OnSetHumanSpectator", ET_Event, 2, nullptr,
-      Param_Cell, Param_Cell);
-  g_pFwdEndVersusModeRound = forwards->CreateForward("L4D_OnEndVersusModeRound", ET_Event, 1, nullptr,
-      Param_Cell);
+  if (Detour_EndVersusModeRound) {
+    g_pFwdEndVersusModeRound = forwards->CreateForward("L4D_OnEndVersusModeRound", ET_Event, 1, nullptr,
+        Param_Cell);
+    Detour_EndVersusModeRound->EnableDetour();
+  } else {
+    smutils->LogError(myself, "\"%s\" detour could not be initialized", "EndVersusModeRound");
+  }
 }
 
 void ReleaseSharedForwards() {
-  forwards->ReleaseForward(g_pFwdOnSpawnTank);
-  forwards->ReleaseForward(g_pFwdOnSpawnWitch);
-  forwards->ReleaseForward(g_pFwdOnClearTeamScores);
-  forwards->ReleaseForward(g_pFwdOnSetCampaignScores);
-  forwards->ReleaseForward(g_pFwdOnFirstSurvivorLeftSafeArea);
-  forwards->ReleaseForward(g_pFwdOnTryOfferingTankBot);
-  forwards->ReleaseForward(g_pFwdOnMobRushStart);
-  forwards->ReleaseForward(g_pFwdReplaceTank);
-  forwards->ReleaseForward(g_pFwdTakeOverBot);
-  forwards->ReleaseForward(g_pFwdTakeOverZombieBot);
-  forwards->ReleaseForward(g_pFwdReplaceWithBot);
-  forwards->ReleaseForward(g_pFwdSetHumanSpectator);
-  forwards->ReleaseForward(g_pFwdEndVersusModeRound);
+  if (Detour_SpawnTank) {
+    forwards->ReleaseForward(g_pFwdOnSpawnTank);
+    Detour_SpawnTank->Destroy();
+  }
+
+  if (Detour_SpawnWitch) {
+    forwards->ReleaseForward(g_pFwdOnSpawnWitch);
+    Detour_SpawnWitch->Destroy();
+  }
+
+  if (Detour_ClearTeamScores) {
+    forwards->ReleaseForward(g_pFwdOnClearTeamScores);
+    Detour_ClearTeamScores->Destroy();
+  }
+
+  if (Detour_SetCampaignScores) {
+    forwards->ReleaseForward(g_pFwdOnSetCampaignScores);
+    Detour_SetCampaignScores->Destroy();
+  }
+
+  if (Detour_OnFirstSurvivorLeftSafeArea) {
+    forwards->ReleaseForward(g_pFwdOnFirstSurvivorLeftSafeArea);
+    Detour_OnFirstSurvivorLeftSafeArea->Destroy();
+  }
+
+  if (Detour_TryOfferingTankBot) {
+    forwards->ReleaseForward(g_pFwdOnTryOfferingTankBot);
+    Detour_TryOfferingTankBot->Destroy();
+  }
+
+  if (Detour_OnMobRushStart) {
+    forwards->ReleaseForward(g_pFwdOnMobRushStart);
+    Detour_TryOfferingTankBot->Destroy();
+  }
+
+  if (Detour_ReplaceTank) {
+    forwards->ReleaseForward(g_pFwdReplaceTank);
+    Detour_ReplaceTank->Destroy();
+  }
+
+  if (Detour_TakeOverBot) {
+    forwards->ReleaseForward(g_pFwdTakeOverBot);
+    Detour_TakeOverBot->Destroy();
+  }
+
+  if (Detour_TakeOverZombieBot) {
+    forwards->ReleaseForward(g_pFwdTakeOverZombieBot);
+    Detour_TakeOverZombieBot->Destroy();
+  }
+
+  if (Detour_ReplaceWithBot) {
+    forwards->ReleaseForward(g_pFwdReplaceWithBot);
+    Detour_ReplaceWithBot->Destroy();
+  }
+
+  if (Detour_SetHumanSpectator) {
+    forwards->ReleaseForward(g_pFwdSetHumanSpectator);
+    Detour_SetHumanSpectator->Destroy();
+  }
+
+  if (Detour_EndVersusModeRound) {
+    forwards->ReleaseForward(g_pFwdEndVersusModeRound);
+    Detour_EndVersusModeRound->Destroy();
+  }
 }

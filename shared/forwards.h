@@ -5,8 +5,6 @@
 
 class CTerrorPlayer;
 
-void CreateSharedDetours();
-void DestroySharedDetours();
 void CreateSharedForwards();
 void ReleaseSharedForwards();
 

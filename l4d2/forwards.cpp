@@ -54,20 +54,20 @@ DETOUR_DECL_MEMBER2(GetScriptValueInt, int, const char *, key, int, def) {
 //  /_/    \__,_/_/ /_/\___/\__/_/\____/_/ /_/____/
 //
 
-void CreateL4D2Detours() {
-  Detour_GetScriptValueInt = DETOUR_CREATE_MEMBER(GetScriptValueInt, "GetScriptValueInt");
-  if (Detour_GetScriptValueInt) Detour_GetScriptValueInt->EnableDetour();
-}
-
-void DestroyL4D2Detours() {
-  if (Detour_GetScriptValueInt) Detour_GetScriptValueInt->Destroy();
-}
-
 void CreateL4D2Forwards() {
-  g_pFwdOnGetScriptValueInt = forwards->CreateForward("L4D2_OnGetScriptValueInt", ET_Event, 2, nullptr,
-      Param_String, Param_CellByRef);
+  Detour_GetScriptValueInt = DETOUR_CREATE_MEMBER(GetScriptValueInt, "GetScriptValueInt");
+  if (Detour_GetScriptValueInt) {
+    g_pFwdOnGetScriptValueInt = forwards->CreateForward("L4D2_OnGetScriptValueInt", ET_Event, 2, nullptr,
+        Param_String, Param_CellByRef);
+    Detour_GetScriptValueInt->EnableDetour();
+  } else {
+    smutils->LogError(myself, "\"%s\" detour could not be initialized", "GetScriptValueInt");
+  }
 }
 
 void ReleaseL4D2Forwards() {
-  forwards->ReleaseForward(g_pFwdOnGetScriptValueInt);
+  if (Detour_GetScriptValueInt) {
+    forwards->ReleaseForward(g_pFwdOnGetScriptValueInt);
+    Detour_GetScriptValueInt->Destroy();
+  }
 }

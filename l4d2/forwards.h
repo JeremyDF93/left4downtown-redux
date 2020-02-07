@@ -5,8 +5,6 @@
 
 class CTerrorPlayer;
 
-void CreateL4D2Detours();
-void DestroyL4D2Detours();
 void CreateL4D2Forwards();
 void ReleaseL4D2Forwards();
 

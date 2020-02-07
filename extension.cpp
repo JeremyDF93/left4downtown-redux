@@ -48,11 +48,8 @@ bool Left4downtown::SDK_OnLoad(char *error, size_t maxlen, bool late) {
   CCallManager::Init(g_pGameConf);
 
   CreateSharedForwards();
-  CreateSharedDetours();
-
 #if SOURCE_ENGINE == SE_LEFT4DEAD2
   CreateL4D2Forwards();
-  CreateL4D2Detours();
 #endif
 
 #ifdef _DEBUG
@@ -68,11 +65,8 @@ void Left4downtown::SDK_OnUnload() {
   gameconfs->CloseGameConfigFile(g_pGameConf);
 
   ReleaseSharedForwards();
-  DestroySharedDetours();
-
 #if SOURCE_ENGINE == SE_LEFT4DEAD2
   ReleaseL4D2Forwards();
-  DestroyL4D2Detours();
 #endif
 }
 
