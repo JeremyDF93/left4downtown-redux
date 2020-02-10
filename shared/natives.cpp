@@ -173,6 +173,24 @@ static cell_t L4D_SetHumanSpectator(IPluginContext *pContext, const cell_t *para
   return CALL_INVOKE_MEMBER(pBot, SetHumanSpectator)(pPlayer);
 }
 
+CALL_DECL_MEMBER(ReplaceTank, bool, (CTerrorPlayer *, CTerrorPlayer *))
+static cell_t L4D_ReplaceTank(IPluginContext *pContext, const cell_t *params) {
+  if (!g_pZombieManager)
+    return pContext->ThrowNativeError("Error detected in native call (see error logs)");
+  if (!CALL_JOIN_MEMBER(ReplaceTank, "ReplaceTank"))
+    return pContext->ThrowNativeError("Error detected in native call (see error logs)");
+
+  CTerrorPlayer *pOldTank = reinterpret_cast<CTerrorPlayer *>(UTIL_GetCBaseEntity(params[1], true));
+  CTerrorPlayer *pNewTank = reinterpret_cast<CTerrorPlayer *>(UTIL_GetCBaseEntity(params[2], true));
+
+  if (pOldTank == nullptr)
+    return pContext->ThrowNativeError("Invalid oldTank client index %d", params[1]);
+  if (pNewTank == nullptr)
+    return pContext->ThrowNativeError("Invalid newTank client index %d", params[2]);
+
+  return CALL_INVOKE_MEMBER(g_pZombieManager, ReplaceTank)(pOldTank, pNewTank);
+}
+
 sp_nativeinfo_t g_SharedNatives[] = {
   {"L4D_SpawnTank",                       L4D_SpawnTank},
   {"L4D_SpawnWitch",                      L4D_SpawnWitch},
@@ -185,5 +203,14 @@ sp_nativeinfo_t g_SharedNatives[] = {
   {"L4D_TakeOverZombieBot",               L4D_TakeOverZombieBot},
   {"L4D_ReplaceWithBot",                  L4D_ReplaceWithBot},
   {"L4D_SetHumanSpectator",               L4D_SetHumanSpectator},
+  // {"L4D_StaggerPlayer",                   L4D_StaggerPlayer},
+  // {"L4D_GetMobSpawnTimerRemaining",       L4D_GetMobSpawnTimerRemaining},
+  // {"L4D_GetMobSpawnTimerDuration",        L4D_GetMobSpawnTimerDuration},
+  // {"L4D_GetPlayerSpawnTime",              L4D_GetPlayerSpawnTime},
+  {"L4D_ReplaceTank",                     L4D_ReplaceTank},
+  // {"L4D2_SendInRescueVehicle",            L4D2_SendInRescueVehicle},
+  // {"L4D2_ChangeFinaleStage",              L4D2_ChangeFinaleStage},
+  // {"L4D2_SpawnSpecial",                   L4D2_SpawnSpecial},
+  // {"L4D2_SpawnWitchBride",                L4D2_SpawnWitchBride},
   {nullptr,                               nullptr}
 };

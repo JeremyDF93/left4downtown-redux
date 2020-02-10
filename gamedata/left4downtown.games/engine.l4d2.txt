@@ -138,6 +138,16 @@
         "library"   "server"
         "linux"     "@_ZN19CDirectorVersusMode18EndVersusModeRoundEb"
       }
+      "IsFirstMapInScenario"
+      {
+        "library"   "server"
+        "linux"     "@_ZNK9CDirector20IsFirstMapInScenarioEv"
+      }
+      "GetMissionFirstMap"
+      {
+        "library"   "server"
+        "linux"     "@_ZN16CTerrorGameRules18GetMissionFirstMapEPP9KeyValues"
+      }
     }
   }
 }

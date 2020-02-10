@@ -43,6 +43,7 @@ native void L4D_TakeOverBot(int client, bool flag=true);
 native void L4D_TakeOverZombieBot(int client, int bot);
 native void L4D_ReplaceWithBot(int client, bool flag=true);
 native void L4D_SetHumanSpectator(int bot, int client);
+native void L4D_ReplaceTank(int oldTank, int newTank);
 
 /***
  *        __   __ __  ____ ___
@@ -60,6 +61,7 @@ native void L4D2_ScavengeBeginRoundSetupTime();
 native int L4D2_GetVersusMaxCompletionScore();
 native void L4D2_SetVersusMaxCompletionScore(int score);
 native void L4D2_ResetMobTimer();
+native bool L4D2_IsFirstMapInScenario();
 
 /*
 public SharedPlugin __pl_left4downtown = {

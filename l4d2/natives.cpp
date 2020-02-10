@@ -43,11 +43,23 @@ static cell_t L4D2_ResetMobTimer(IPluginContext *pContext, const cell_t *params)
   return 1;
 }
 
+/* CDirector::IsFirstMapInScenario() const */
+CALL_DECL_MEMBER(IsFirstMapInScenario, bool, (void));
+static cell_t L4D2_IsFirstMapInScenario(IPluginContext *pContext, const cell_t *params) {
+  if (!g_pDirector)
+    return pContext->ThrowNativeError("Error detected in native call (see error logs)");
+  if (!CALL_JOIN_MEMBER(IsFirstMapInScenario, "IsFirstMapInScenario"))
+    return pContext->ThrowNativeError("Error detected in native call (see error logs)");
+
+  return CALL_INVOKE_MEMBER(g_pDirector, IsFirstMapInScenario)();
+}
+
 sp_nativeinfo_t g_L4D2Natives[] = {
   {"L4D2_GetCampaignScores",              L4D2_GetCampaignScores},
   {"L4D2_ScavengeBeginRoundSetupTime",    L4D2_ScavengeBeginRoundSetupTime},
   {"L4D2_GetVersusMaxCompletionScore",    L4D2_GetVersusMaxCompletionScore},
   {"L4D2_SetVersusMaxCompletionScore",    L4D2_SetVersusMaxCompletionScore},
   {"L4D2_ResetMobTimer",                  L4D2_ResetMobTimer},
+  {"L4D2_IsFirstMapInScenario",            L4D2_IsFirstMapInScenario},
   {nullptr,                               nullptr}
 };
