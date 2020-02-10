@@ -1,10 +1,10 @@
 #include "extension.h"
 
-CALL_DECL_MEMBER(GetTeamScore, int, (int, bool));
+CALL_DECL(GetTeamScore, int, (int, bool));
 static cell_t L4D_GetTeamScore(IPluginContext *pContext, const cell_t *params) {
   if (!g_pGameRules)
     return pContext->ThrowNativeError("Error detected in native call (see error logs)");
-  if (!CALL_JOIN_MEMBER(GetTeamScore, "GetTeamScore"))
+  if (!CALL_JOIN(GetTeamScore, "GetTeamScore"))
     return pContext->ThrowNativeError("Error detected in native call (see error logs)");
 
   int logicalTeam = params[1];
@@ -14,19 +14,19 @@ static cell_t L4D_GetTeamScore(IPluginContext *pContext, const cell_t *params) {
   if (logicalTeam != 1 && logicalTeam != 2)
     return pContext->ThrowNativeError("Logical team \"%d\" is invalid - options are \"1\" or \"2\"", logicalTeam);
 
-  return CALL_INVOKE_MEMBER(g_pGameRules, GetTeamScore)(logicalTeam, type);
+  return CALL_INVOKE(g_pGameRules, GetTeamScore)(logicalTeam, type);
 }
 
-CALL_DECL_MEMBER(SetReservationCookie, void, (uint64_t, const char *, ...));
+CALL_DECL(SetReservationCookie, void, (uint64_t, const char *, ...));
 static cell_t L4D_LobbyUnreserve(IPluginContext *pContext, const cell_t *params) {
   if (!g_pServer)
     return pContext->ThrowNativeError("Error detected in native call (see error logs)");
-  if (!CALL_JOIN_MEMBER(SetReservationCookie, "SetReservationCookie"))
+  if (!CALL_JOIN(SetReservationCookie, "SetReservationCookie"))
     return pContext->ThrowNativeError("Error detected in native call (see error logs)");
 
   uint64_t reservationCookie = 0;
   const char* formatString = "Manually unreserved by Left 4 Downtown Extension";
-  CALL_INVOKE_MEMBER(g_pServer, SetReservationCookie)(reservationCookie, formatString);
+  CALL_INVOKE(g_pServer, SetReservationCookie)(reservationCookie, formatString);
 
   return 1;
 }
@@ -37,47 +37,47 @@ static cell_t L4D_IsLobbyReserved(IPluginContext *pContext, const cell_t *params
   return sv_hosting_lobby.GetBool();
 }
 
-CALL_DECL_MEMBER(IsMissionFinalMap, bool, (void));
+CALL_DECL(IsMissionFinalMap, bool, (void));
 static cell_t L4D_IsMissionFinalMap(IPluginContext *pContext, const cell_t *params) {
   if (!g_pGameRules)
     return pContext->ThrowNativeError("Error detected in native call (see error logs)");
-  if (!CALL_JOIN_MEMBER(IsMissionFinalMap, "IsMissionFinalMap"))
+  if (!CALL_JOIN(IsMissionFinalMap, "IsMissionFinalMap"))
     return pContext->ThrowNativeError("Error detected in native call (see error logs)");
 
-  return CALL_INVOKE_MEMBER(g_pGameRules, IsMissionFinalMap)();
+  return CALL_INVOKE(g_pGameRules, IsMissionFinalMap)();
 }
 
-CALL_DECL_MEMBER(RestartScenarioFromVote, void, (char const*));
+CALL_DECL(RestartScenarioFromVote, void, (char const*));
 static cell_t L4D_RestartScenarioFromVote(IPluginContext *pContext, const cell_t *params) {
   if (!g_pDirector)
     return pContext->ThrowNativeError("Error detected in native call (see error logs)");
-  if (!CALL_JOIN_MEMBER(IsMissionFinalMap, "RestartScenarioFromVote"))
+  if (!CALL_JOIN(IsMissionFinalMap, "RestartScenarioFromVote"))
     return pContext->ThrowNativeError("Error detected in native call (see error logs)");
 
   char *map = nullptr;
   pContext->LocalToString(params[1], &map);
-  CALL_INVOKE_MEMBER(g_pDirector, RestartScenarioFromVote)(map);
+  CALL_INVOKE(g_pDirector, RestartScenarioFromVote)(map);
 
   return 1;
 }
 
-CALL_DECL_MEMBER(NotifyNetworkStateChanged, void, (void));
+CALL_DECL(NotifyNetworkStateChanged, void, (void));
 static cell_t L4D_NotifyNetworkStateChanged(IPluginContext *pContext, const cell_t *params) {
   if (!g_pGameRules)
     return pContext->ThrowNativeError("Error detected in native call (see error logs)");
-  if (!CALL_JOIN_MEMBER(IsMissionFinalMap, "NotifyNetworkStateChanged"))
+  if (!CALL_JOIN(IsMissionFinalMap, "NotifyNetworkStateChanged"))
     return pContext->ThrowNativeError("Error detected in native call (see error logs)");
 
-  CALL_INVOKE_MEMBER(g_pGameRules, NotifyNetworkStateChanged)();
+  CALL_INVOKE(g_pGameRules, NotifyNetworkStateChanged)();
 
   return 1;
 }
 
-CALL_DECL_MEMBER(SpawnTank, int, (Vector *, QAngle *));
+CALL_DECL(SpawnTank, int, (Vector *, QAngle *));
 static cell_t L4D_SpawnTank(IPluginContext *pContext, const cell_t *params) {
   if (!g_pZombieManager)
     return pContext->ThrowNativeError("Error detected in native call (see error logs)");
-  if (!CALL_JOIN_MEMBER(SpawnTank, "SpawnTank"))
+  if (!CALL_JOIN(SpawnTank, "SpawnTank"))
     return pContext->ThrowNativeError("Error detected in native call (see error logs)");
 
   cell_t *vec_addr;
@@ -89,14 +89,14 @@ static cell_t L4D_SpawnTank(IPluginContext *pContext, const cell_t *params) {
   Vector vec(sp_ctof(vec_addr[0]), sp_ctof(vec_addr[1]), sp_ctof(vec_addr[2]));
   QAngle ang(sp_ctof(ang_addr[0]), sp_ctof(ang_addr[1]), sp_ctof(ang_addr[2]));
 
-  return CALL_INVOKE_MEMBER(g_pZombieManager, SpawnTank)(&vec, &ang);
+  return CALL_INVOKE(g_pZombieManager, SpawnTank)(&vec, &ang);
 }
 
-CALL_DECL_MEMBER(SpawnWitch, int, (Vector *, QAngle *));
+CALL_DECL(SpawnWitch, int, (Vector *, QAngle *));
 static cell_t L4D_SpawnWitch(IPluginContext *pContext, const cell_t *params) {
   if (!g_pZombieManager)
     return pContext->ThrowNativeError("Error detected in native call (see error logs)");
-  if (!CALL_JOIN_MEMBER(SpawnWitch, "SpawnWitch"))
+  if (!CALL_JOIN(SpawnWitch, "SpawnWitch"))
     return pContext->ThrowNativeError("Error detected in native call (see error logs)");
 
   cell_t *vec_addr;
@@ -108,12 +108,12 @@ static cell_t L4D_SpawnWitch(IPluginContext *pContext, const cell_t *params) {
   Vector vec(sp_ctof(vec_addr[0]), sp_ctof(vec_addr[1]), sp_ctof(vec_addr[2]));
   QAngle ang(sp_ctof(ang_addr[0]), sp_ctof(ang_addr[1]), sp_ctof(ang_addr[2]));
 
-  return CALL_INVOKE_MEMBER(g_pZombieManager, SpawnWitch)(&vec, &ang);
+  return CALL_INVOKE(g_pZombieManager, SpawnWitch)(&vec, &ang);
 }
 
-CALL_DECL_MEMBER(TakeOverBot, bool, (bool));
+CALL_DECL(TakeOverBot, bool, (bool));
 static cell_t L4D_TakeOverBot(IPluginContext *pContext, const cell_t *params) {
-  if (!CALL_JOIN_MEMBER(TakeOverBot, "TakeOverBot"))
+  if (!CALL_JOIN(TakeOverBot, "TakeOverBot"))
     return pContext->ThrowNativeError("Error detected in native call (see error logs)");
 
   CTerrorPlayer *pBot = reinterpret_cast<CTerrorPlayer *>(UTIL_GetCBaseEntity(params[1], true));
@@ -122,12 +122,12 @@ static cell_t L4D_TakeOverBot(IPluginContext *pContext, const cell_t *params) {
   if (pBot == nullptr)
     return pContext->ThrowNativeError("Invalid bot client index %d", params[1]);
 
-  return CALL_INVOKE_MEMBER(pBot, TakeOverBot)(flag);
+  return CALL_INVOKE(pBot, TakeOverBot)(flag);
 }
 
-CALL_DECL_MEMBER(TakeOverZombieBot, void, (CTerrorPlayer *));
+CALL_DECL(TakeOverZombieBot, void, (CTerrorPlayer *));
 static cell_t L4D_TakeOverZombieBot(IPluginContext *pContext, const cell_t *params) {
-  if (!CALL_JOIN_MEMBER(TakeOverZombieBot, "TakeOverZombieBot"))
+  if (!CALL_JOIN(TakeOverZombieBot, "TakeOverZombieBot"))
     return pContext->ThrowNativeError("Error detected in native call (see error logs)");
 
   CTerrorPlayer *pPlayer = reinterpret_cast<CTerrorPlayer *>(UTIL_GetCBaseEntity(params[1], true));
@@ -138,14 +138,14 @@ static cell_t L4D_TakeOverZombieBot(IPluginContext *pContext, const cell_t *para
   if (pBot == nullptr)
     return pContext->ThrowNativeError("Invalid bot client index %d", params[2]);
 
-  CALL_INVOKE_MEMBER(pPlayer, TakeOverZombieBot)(pBot);
+  CALL_INVOKE(pPlayer, TakeOverZombieBot)(pBot);
 
   return 1;
 }
 
-CALL_DECL_MEMBER(ReplaceWithBot, bool, (bool));
+CALL_DECL(ReplaceWithBot, bool, (bool));
 static cell_t L4D_ReplaceWithBot(IPluginContext *pContext, const cell_t *params) {
-  if (!CALL_JOIN_MEMBER(ReplaceWithBot, "ReplaceWithBot"))
+  if (!CALL_JOIN(ReplaceWithBot, "ReplaceWithBot"))
     return pContext->ThrowNativeError("Error detected in native call (see error logs)");
 
   CTerrorPlayer *pPlayer = reinterpret_cast<CTerrorPlayer *>(UTIL_GetCBaseEntity(params[1], true));
@@ -154,12 +154,12 @@ static cell_t L4D_ReplaceWithBot(IPluginContext *pContext, const cell_t *params)
   if (pPlayer == nullptr)
     return pContext->ThrowNativeError("Invalid client index %d", params[1]);
 
-  return CALL_INVOKE_MEMBER(pPlayer, ReplaceWithBot)(flag);
+  return CALL_INVOKE(pPlayer, ReplaceWithBot)(flag);
 }
 
-CALL_DECL_MEMBER(SetHumanSpectator, bool, (CTerrorPlayer *));
+CALL_DECL(SetHumanSpectator, bool, (CTerrorPlayer *));
 static cell_t L4D_SetHumanSpectator(IPluginContext *pContext, const cell_t *params) {
-  if (!CALL_JOIN_MEMBER(SetHumanSpectator, "SetHumanSpectator"))
+  if (!CALL_JOIN(SetHumanSpectator, "SetHumanSpectator"))
     return pContext->ThrowNativeError("Error detected in native call (see error logs)");
 
   SurvivorBot *pBot = reinterpret_cast<SurvivorBot *>(UTIL_GetCBaseEntity(params[1], true));
@@ -170,14 +170,14 @@ static cell_t L4D_SetHumanSpectator(IPluginContext *pContext, const cell_t *para
   if (pPlayer == nullptr)
     return pContext->ThrowNativeError("Invalid client index %d", params[2]);
 
-  return CALL_INVOKE_MEMBER(pBot, SetHumanSpectator)(pPlayer);
+  return CALL_INVOKE(pBot, SetHumanSpectator)(pPlayer);
 }
 
-CALL_DECL_MEMBER(ReplaceTank, bool, (CTerrorPlayer *, CTerrorPlayer *))
+CALL_DECL(ReplaceTank, bool, (CTerrorPlayer *, CTerrorPlayer *));
 static cell_t L4D_ReplaceTank(IPluginContext *pContext, const cell_t *params) {
   if (!g_pZombieManager)
     return pContext->ThrowNativeError("Error detected in native call (see error logs)");
-  if (!CALL_JOIN_MEMBER(ReplaceTank, "ReplaceTank"))
+  if (!CALL_JOIN(ReplaceTank, "ReplaceTank"))
     return pContext->ThrowNativeError("Error detected in native call (see error logs)");
 
   CTerrorPlayer *pOldTank = reinterpret_cast<CTerrorPlayer *>(UTIL_GetCBaseEntity(params[1], true));
@@ -188,7 +188,7 @@ static cell_t L4D_ReplaceTank(IPluginContext *pContext, const cell_t *params) {
   if (pNewTank == nullptr)
     return pContext->ThrowNativeError("Invalid newTank client index %d", params[2]);
 
-  return CALL_INVOKE_MEMBER(g_pZombieManager, ReplaceTank)(pOldTank, pNewTank);
+  return CALL_INVOKE(g_pZombieManager, ReplaceTank)(pOldTank, pNewTank);
 }
 
 sp_nativeinfo_t g_SharedNatives[] = {

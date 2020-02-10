@@ -11,14 +11,14 @@ static cell_t L4D2_GetCampaignScores(IPluginContext *pContext, const cell_t *par
   return 1;
 }
 
-CALL_DECL_MEMBER(OnBeginRoundSetupTime, void, (void));
+CALL_DECL(OnBeginRoundSetupTime, void, (void));
 static cell_t L4D2_ScavengeBeginRoundSetupTime(IPluginContext *pContext, const cell_t *params) {
   if (!g_pDirector)
     return pContext->ThrowNativeError("Error detected in native call (see error logs)");
-  if (!CALL_JOIN_MEMBER(OnBeginRoundSetupTime, "OnBeginRoundSetupTime"))
+  if (!CALL_JOIN(OnBeginRoundSetupTime, "OnBeginRoundSetupTime"))
     return pContext->ThrowNativeError("Error detected in native call (see error logs)");
 
-  CALL_INVOKE_MEMBER(g_pDirector, OnBeginRoundSetupTime)();
+  CALL_INVOKE(g_pDirector, OnBeginRoundSetupTime)();
 
   return 1;
 }
@@ -31,27 +31,27 @@ static cell_t L4D2_SetVersusMaxCompletionScore(IPluginContext *pContext, const c
   return 1;
 }
 
-CALL_DECL_MEMBER(ResetMobTimer, void, (void));
+CALL_DECL(ResetMobTimer, void, (void));
 static cell_t L4D2_ResetMobTimer(IPluginContext *pContext, const cell_t *params) {
   if (!g_pDirector)
     return pContext->ThrowNativeError("Error detected in native call (see error logs)");
-  if (!CALL_JOIN_MEMBER(ResetMobTimer, "ResetMobTimer"))
+  if (!CALL_JOIN(ResetMobTimer, "ResetMobTimer"))
     return pContext->ThrowNativeError("Error detected in native call (see error logs)");
 
-  CALL_INVOKE_MEMBER(g_pDirector, ResetMobTimer)();
+  CALL_INVOKE(g_pDirector, ResetMobTimer)();
 
   return 1;
 }
 
 /* CDirector::IsFirstMapInScenario() const */
-CALL_DECL_MEMBER(IsFirstMapInScenario, bool, (void));
+CALL_DECL(IsFirstMapInScenario, bool, (void));
 static cell_t L4D2_IsFirstMapInScenario(IPluginContext *pContext, const cell_t *params) {
   if (!g_pDirector)
     return pContext->ThrowNativeError("Error detected in native call (see error logs)");
-  if (!CALL_JOIN_MEMBER(IsFirstMapInScenario, "IsFirstMapInScenario"))
+  if (!CALL_JOIN(IsFirstMapInScenario, "IsFirstMapInScenario"))
     return pContext->ThrowNativeError("Error detected in native call (see error logs)");
 
-  return CALL_INVOKE_MEMBER(g_pDirector, IsFirstMapInScenario)();
+  return CALL_INVOKE(g_pDirector, IsFirstMapInScenario)();
 }
 
 sp_nativeinfo_t g_L4D2Natives[] = {
