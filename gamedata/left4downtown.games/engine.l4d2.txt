@@ -148,6 +148,11 @@
         "library"   "server"
         "linux"     "@_ZN16CTerrorGameRules18GetMissionFirstMapEPP9KeyValues"
       }
+      "GetMissionVersusBossSpawning"
+      {
+        "library"   "server"
+        "linux"     "@_ZN19CDirectorVersusMode28GetMissionVersusBossSpawningERfS0_S0_S0_"
+      }
     }
   }
 }

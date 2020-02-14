@@ -55,6 +55,7 @@ native void L4D_ReplaceTank(int oldTank, int newTank);
  */
 
 forward Action L4D2_OnGetScriptValueInt(const char[] key, int &retVal);
+forward Action L4D2_OnGetMissionVSBossSpawning(float &min, float &max, float &tankChance, float &witchChance);
 
 native void L4D2_GetCampaignScores(int &scoreA, int &scoreB);
 native void L4D2_ScavengeBeginRoundSetupTime();
