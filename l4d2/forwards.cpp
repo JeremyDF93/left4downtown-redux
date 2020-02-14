@@ -34,34 +34,34 @@ DETOUR_DECL_MEMBER2(GetScriptValueInt, int, const char *, key, int, def) {
 }
 
 /* CDirectorVersusMode::GetMissionVersusBossSpawning(float&, float&, float&, float&) */
-DETOUR_DECL_MEMBER4(GetMissionVersusBossSpawning, void, float &, min, float &, max, float &, tankChance, float &, witchChance) {
+DETOUR_DECL_MEMBER4(GetMissionVersusBossSpawning, void, float &, fMin, float &, fMax, float &, fTankChance, float &, fWitchChance) {
   if (!g_pFwdOnGetScriptValueInt) {
-    return DETOUR_MEMBER_CALL(GetMissionVersusBossSpawning)(min, max, tankChance, witchChance);
+    return DETOUR_MEMBER_CALL(GetMissionVersusBossSpawning)(fMin, fMax, fTankChance, fWitchChance);
   }
 
 #ifdef _DEBUG
-  smutils->LogMessage(myself, "GetMissionVersusBossSpawning(%s, %d)", min, max, tankChance, witchChance);
+  smutils->LogMessage(myself, "GetMissionVersusBossSpawning(%s, %d)", fMin, fMax, fTankChance, fWitchChance);
 #endif
 
-  float minRef = min;
-  float maxRef = max;
-  float tankChanceRef = tankChance;
-  float witchChanceRef = witchChance;
+  float fMinRef = fMin;
+  float fMaxRef = fMax;
+  float fTankChanceRef = fTankChance;
+  float fWitchChanceRef = fWitchChance;
 
   cell_t result = Pl_Continue;
 
-  g_pFwdOnGetMissionVersusBossSpawning->PushFloatByRef(&minRef);
-  g_pFwdOnGetMissionVersusBossSpawning->PushFloatByRef(&maxRef);
-  g_pFwdOnGetMissionVersusBossSpawning->PushFloatByRef(&tankChanceRef);
-  g_pFwdOnGetMissionVersusBossSpawning->PushFloatByRef(&witchChanceRef);
+  g_pFwdOnGetMissionVersusBossSpawning->PushFloatByRef(&fMinRef);
+  g_pFwdOnGetMissionVersusBossSpawning->PushFloatByRef(&fMaxRef);
+  g_pFwdOnGetMissionVersusBossSpawning->PushFloatByRef(&fTankChanceRef);
+  g_pFwdOnGetMissionVersusBossSpawning->PushFloatByRef(&fWitchChanceRef);
   g_pFwdOnGetMissionVersusBossSpawning->Execute(&result);
 
   if (result == Pl_Changed)
-    return DETOUR_MEMBER_CALL(GetMissionVersusBossSpawning)(minRef, maxRef, tankChanceRef, witchChanceRef);
+    return DETOUR_MEMBER_CALL(GetMissionVersusBossSpawning)(fMinRef, fMaxRef, fTankChanceRef, fWitchChanceRef);
   if (result == Pl_Handled)
     return;
 
-  return DETOUR_MEMBER_CALL(GetMissionVersusBossSpawning)(min, max, tankChance, witchChance);
+  return DETOUR_MEMBER_CALL(GetMissionVersusBossSpawning)(fMin, fMax, fTankChance, fWitchChance);
 }
 
 //      ______                 __  _
